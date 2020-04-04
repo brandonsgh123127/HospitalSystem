@@ -7,7 +7,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
@@ -35,7 +34,7 @@
       </HBox>
       <GridPane prefHeight="123.0" prefWidth="593.0" vgap="50.0">
          <children>
-            <PasswordField maxWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <PasswordField fx:id="passField" maxWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
@@ -50,7 +49,7 @@
                   <Font name="Segoe UI Symbol" size="24.0" />
                </font>
             </Label>
-            <TextField maxWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="userField" maxWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="25.0" />

@@ -15,11 +15,12 @@ import javafx.application.Application;
 
 
 public class FXMLLoginController{
-	
-	public FXMLLoginController(){
-		System.out.println("Login Screen...");
+	Stage stage;
+	public FXMLLoginController(Stage stage){
+		this.stage = stage;
+		System.out.println("Login Screen...");		
 	}
-	public Scene LoginScreen(Stage stage) throws IOException {
+	public Scene LoginScreen() throws IOException {
 		//stage.hide();
 		FXMLLoader loader = new FXMLLoader();
 		String path = System.getProperty("user.dir") + "\\fxml\\Login2.fxml";

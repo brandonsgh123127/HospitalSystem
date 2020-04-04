@@ -40,8 +40,8 @@ public class App extends Application
 //        stage.show();
     	
     	//Start with login...
-    	FXMLLoginController f = new FXMLLoginController();
-    	stage.setScene(f.LoginScreen(stage));
+    	FXMLLoginController f = new FXMLLoginController(stage);
+    	stage.setScene(f.LoginScreen());
     	stage.show();
     }
 
