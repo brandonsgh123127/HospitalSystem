@@ -78,6 +78,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>11</version>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.45</version>
+        </dependency>    
   </dependencies>
 
   <build>
@@ -157,6 +162,15 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <mainClass>com.zetcode.AppName</mainClass>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                </configuration>
             </plugin>
       </plugins>
     </pluginManagement>

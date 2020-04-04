@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" text="Home" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="960.0">
+               <children>
+                  <Label minHeight="100.0" text="Patients">
+                     <font>
+                        <Font name="Segoe UI Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <TableView maxWidth="850.0" prefHeight="800.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn prefWidth="200.0" text="Name" />
+                      <TableColumn prefWidth="200.0" text="Date of Birth" />
+                        <TableColumn prefWidth="200.0" text="Gender" />
+                        <TableColumn prefWidth="200.0" text="Room" />
+                    </columns>
+                  </TableView>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="960.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Unassigned Patients">
+                           <font>
+                              <Font name="Segoe UI Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <TextField promptText="Search" translateX="560.0" />
+                     </children>
+                  </HBox>
+                  <TableView maxWidth="900.0" prefHeight="800.0" prefWidth="200.0">
+                     <columns>
+                        <TableColumn prefWidth="200.0" text="Name" />
+                        <TableColumn prefWidth="200.0" text="Date of Birth" />
+                        <TableColumn prefWidth="200.0" text="Gender" />
+                        <TableColumn prefWidth="200.0" text="Room" />
+                        <TableColumn prefWidth="58.0" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </content>
+</TitledPane>
