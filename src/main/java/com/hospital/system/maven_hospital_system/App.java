@@ -1,4 +1,6 @@
 package com.hospital.system.maven_hospital_system;
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,10 +24,20 @@ public class App extends Application
     }
     @Override
     public void start(Stage stage) throws Exception {
+
     	//Start with login...
     	FXMLLoginController f = new FXMLLoginController(stage);
-    	stage.setScene(f.LoginScreen());
+    	try{
+        	stage.setScene(f.LoginScreen());
+		}
+		catch(IOException e) {
+			System.err.println("Scene Invalid!  Please Validate correct pointer to login file...");
+		}
     	stage.show();
+    	
+    	
+    	
+    	
     }
 
 }
