@@ -30,6 +30,7 @@ import java.sql.*;
 public class FXMLLoginController{
 	private Stage stage;
 	private Scene scene;
+	private String s;
 	
 	@FXML
 	private PasswordField passField;
