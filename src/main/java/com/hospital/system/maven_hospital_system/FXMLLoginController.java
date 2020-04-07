@@ -12,10 +12,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -30,11 +32,15 @@ import java.sql.*;
 public class FXMLLoginController{
 	private Stage stage;
 	private Scene scene;
-	private String s;
+	private String passHash;
 	
 	@FXML
 	private PasswordField passField;
 	
+	@FXML
+	private TextField userField;
+	@FXML
+	private GridPane grid;
 	/**
 	 * Constructor for Login Object
 	 * @param stage
@@ -67,19 +73,31 @@ public class FXMLLoginController{
 								 * New Method to be created
 								 */
 								try {
-									
-									System.out.println(toHexString(getSHA(passField.getText())));
+									passHash = toHexString(getSHA(passField.getText()));
+									System.out.println(passHash);
 								}
 								catch(NoSuchAlgorithmException e) {
 									System.err.println("Encryption error!  Please check to make sure encryption type valid...");
 								}
+								try {
+									isValidCredentials(userField.getText(),passHash);  /* CHECK CREDENTIALS HERE*/
+								} catch (ClassNotFoundException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								catch(NullPointerException e) {
+									e.printStackTrace();								}
 							}
 						}
 				});
 		//Instantiate scene
 		this.scene = new Scene(root);
+		grid = (GridPane) scene.lookup("#grid");
 		passField = (PasswordField) scene.lookup("#passField");  //Use the Current scene to lookup password ID for retrieval of password.
-
+		userField = (TextField)scene.lookup("userField");  
 		return scene;
 	}
 	/**
@@ -115,9 +133,19 @@ public class FXMLLoginController{
 	 * @param userName The current user Input for name
 	 * @param passHash The Hashed Password
 	 * @return If credentials are correct.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
 	 */
-	private Boolean isValidCredentials(String userName, String passHash) {
-		return false;
+	private Boolean isValidCredentials(String userName, String passHash) throws SQLException, ClassNotFoundException {
+		Class.forName("com.mysql.jdbc.Driver");  
+		Connection con=DriverManager.getConnection(  
+		"jdbc:mysql://localhost:3306/HospitalSys","Spada","Mght357#"); 
+		Statement stmt=con.createStatement();  
+		ResultSet rs=stmt.executeQuery("select * from users");  
+		while(rs.next())  
+			System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));  
+		con.close();  
+		return true;
 	}
 	
 	
