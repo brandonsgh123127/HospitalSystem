@@ -24,20 +24,15 @@ public class App extends Application
     }
     @Override
     public void start(Stage stage) throws Exception {
-
     	//Start with login...
     	FXMLLoginController f = new FXMLLoginController(stage);
     	try{
-        	stage.setScene(f.LoginScreen());
-		}
+    		stage.setScene(f.LoginScreen());
+    		
+    	}
 		catch(IOException e) {
 			System.err.println("Scene Invalid!  Please Validate correct pointer to login file...");
 		}
     	stage.show();
-    	
-    	
-    	
-    	
-    }
-
+    	}
 }

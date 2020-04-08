@@ -29,10 +29,11 @@ import java.sql.*;
 
 
 
-public class FXMLLoginController{
+public class FXMLLoginController<E>{
 	private Stage stage;
 	private Scene scene;
 	private String passHash;
+	private int roleNum=-1;
 	
 	Connection con;
 
@@ -92,6 +93,7 @@ public class FXMLLoginController{
 											failedAttempts();
 										}
 									}
+
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -155,6 +157,7 @@ public class FXMLLoginController{
 		ResultSet rs=stmt.executeQuery("SELECT * FROM users WHERE UserID=" + userField.getText());  
 		while(rs.next()) {
 			if(rs.getString(5).matches(passHash)) {
+				roleNum= Integer.valueOf(rs.getString(2));
 				System.out.println("SUCCESS");
 				return true;
 				/*	When Successfully Logged in, check role number and display new screen based off of this*/
@@ -169,7 +172,7 @@ public class FXMLLoginController{
 		catch(Exception e) {
 			System.out.println("Server Connection Exception!");
 		}
-		return true;
+		return false;
 	}
 	
 	/**
@@ -180,7 +183,35 @@ public class FXMLLoginController{
 		Thread.sleep(5000);
 		numAttempts=5;
 	}
+	public int getRole() {
+		return roleNum;
+	}
+	/**
+	 * Method that will switch to correct screen based on role...
+	 * @throws IOException 
+	 */
+	public Object switchHome() throws IOException {
+		switch(roleNum) {
+		case 0:{
+			System.out.println("Admin");
+			AdministratorController admin = new AdministratorController(stage,scene);
+			return admin.displayPage();
+		}
+		case 1:{
+			System.out.println("Doctor");
+			break;
+		}
+		case 2:{
+			System.out.println("Nurse");
+			break;
+		}
+		case 3:{
+			System.out.println("Lab Technician");
+			break;
+		}
+		}
+		return null;
+		//stage.hide();
+	}
 	
-	
-
 }
