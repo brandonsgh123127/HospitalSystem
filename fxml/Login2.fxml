@@ -32,7 +32,7 @@
             </Label>
          </children>
       </HBox>
-      <GridPane prefHeight="123.0" prefWidth="593.0" vgap="50.0">
+      <GridPane fx:id="grid" prefHeight="123.0" prefWidth="593.0" vgap="50.0">
          <children>
             <PasswordField fx:id="passField" maxWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <GridPane.margin>

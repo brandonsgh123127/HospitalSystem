@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" text="untitled" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TitledPane collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" text="Nurse" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
@@ -13,14 +14,23 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <TextField prefHeight="30.0" prefWidth="250.0" promptText="Search" />
+                        <Label minWidth="380.0" prefHeight="58.0" prefWidth="380.0" text="Current Doctors">
+                           <HBox.margin>
+                              <Insets right="1200.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Segoe UI Bold Italic" size="48.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="search" prefHeight="30.0" prefWidth="250.0" promptText="Search" />
                      </children>
                   </HBox>
                   <TableView maxWidth="1920.0" prefHeight="800.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn prefWidth="640.0" text="Name" />
-                      <TableColumn prefWidth="640.0" text="ID" />
-                        <TableColumn prefWidth="640.0" text="More" />
+                        <TableColumn fx:id="lastName" prefWidth="480.0" text="Last Name" />
+                      <TableColumn fx:id="firstName" prefWidth="480.0" text="First Name" />
+                      <TableColumn fx:id="ID" prefWidth="480.0" text="ID" />
+                        <TableColumn fx:id="more" prefWidth="480.0" text="More" />
                     </columns>
                   </TableView>
                </children>
