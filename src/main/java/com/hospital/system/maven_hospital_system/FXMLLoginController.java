@@ -34,6 +34,10 @@ public class FXMLLoginController{
 	private Scene scene;
 	private String passHash;
 	
+	Connection con;
+
+	
+	private int numAttempts=5;
 	@FXML
 	private PasswordField passField;
 	
@@ -80,24 +84,27 @@ public class FXMLLoginController{
 									System.err.println("Encryption error!  Please check to make sure encryption type valid...");
 								}
 								try {
-									isValidCredentials(userField.getText(),passHash);  /* CHECK CREDENTIALS HERE*/
-								} catch (ClassNotFoundException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} catch (SQLException e) {
+									if(!isValidCredentials(userField.getText(),passHash)  /* CHECK CREDENTIALS HERE*/)
+									{
+										numAttempts--;
+										if(numAttempts==0) {
+											System.out.println("You exceeded the attempts, try again soon...");
+											failedAttempts();
+										}
+									}
+								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								catch(NullPointerException e) {
-									e.printStackTrace();								}
-							}
 						}
-				});
+					}
+				}
+				);
 		//Instantiate scene
 		this.scene = new Scene(root);
 		grid = (GridPane) scene.lookup("#grid");
 		passField = (PasswordField) scene.lookup("#passField");  //Use the Current scene to lookup password ID for retrieval of password.
-		userField = (TextField)scene.lookup("userField");  
+		userField = (TextField)scene.lookup("#userField");  
 		return scene;
 	}
 	/**
@@ -135,17 +142,43 @@ public class FXMLLoginController{
 	 * @return If credentials are correct.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	private Boolean isValidCredentials(String userName, String passHash) throws SQLException, ClassNotFoundException {
-		Class.forName("com.mysql.jdbc.Driver");  
-		Connection con=DriverManager.getConnection(  
-		"jdbc:mysql://localhost:3306/HospitalSys","Spada","Mght357#"); 
+	private Boolean isValidCredentials(String userName, String passHash) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		try{Class.forName("com.mysql.jdbc.Driver");}catch(Exception e) {System.out.println("FAILED jdbc driver");}
+		try {
+		con=DriverManager.getConnection(
+		"jdbc:mysql://localhost:3306/mydb?characterEncoding=latin1&useConfigs=maxPerformance","root","Abcdefg123");
 		Statement stmt=con.createStatement();  
-		ResultSet rs=stmt.executeQuery("select * from users");  
-		while(rs.next())  
-			System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));  
-		con.close();  
+		//CHECK LOGIN!!!
+		ResultSet rs=stmt.executeQuery("SELECT * FROM users WHERE UserID=" + userField.getText());  
+		while(rs.next()) {
+			if(rs.getString(5).matches(passHash)) {
+				System.out.println("SUCCESS");
+				return true;
+				/*	When Successfully Logged in, check role number and display new screen based off of this*/
+			}
+			else {
+				System.out.println("Failed!");
+				return false;
+			}
+			//System.out.println(rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4)+rs.getString(5));
+		}
+		}
+		catch(Exception e) {
+			System.out.println("Server Connection Exception!");
+		}
 		return true;
+	}
+	
+	/**
+	 * @throws InterruptedException 
+	 * 
+	 */
+	private void failedAttempts() throws InterruptedException {
+		Thread.sleep(5000);
+		numAttempts=5;
 	}
 	
 	
