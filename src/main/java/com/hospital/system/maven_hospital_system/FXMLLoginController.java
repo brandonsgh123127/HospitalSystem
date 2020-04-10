@@ -12,10 +12,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -27,14 +29,23 @@ import java.sql.*;
 
 
 
-public class FXMLLoginController{
+public class FXMLLoginController<E>{
 	private Stage stage;
 	private Scene scene;
-	private String s;
+	private String passHash;
+	private int roleNum=-1;
 	
+	Connection con;
+
+	
+	private int numAttempts=5;
 	@FXML
 	private PasswordField passField;
 	
+	@FXML
+	private TextField userField;
+	@FXML
+	private GridPane grid;
 	/**
 	 * Constructor for Login Object
 	 * @param stage
@@ -67,19 +78,35 @@ public class FXMLLoginController{
 								 * New Method to be created
 								 */
 								try {
-									
-									System.out.println(toHexString(getSHA(passField.getText())));
+									passHash = toHexString(getSHA(passField.getText()));
+									System.out.println(passHash);
 								}
 								catch(NoSuchAlgorithmException e) {
 									System.err.println("Encryption error!  Please check to make sure encryption type valid...");
 								}
-							}
+								try {
+									if(!isValidCredentials(userField.getText(),passHash)  /* CHECK CREDENTIALS HERE*/)
+									{
+										numAttempts--;
+										if(numAttempts==0) {
+											System.out.println("You exceeded the attempts, try again soon...");
+											failedAttempts();
+										}
+									}
+
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 						}
-				});
+					}
+				}
+				);
 		//Instantiate scene
 		this.scene = new Scene(root);
+		grid = (GridPane) scene.lookup("#grid");
 		passField = (PasswordField) scene.lookup("#passField");  //Use the Current scene to lookup password ID for retrieval of password.
-
+		userField = (TextField)scene.lookup("#userField");  
 		return scene;
 	}
 	/**
@@ -115,11 +142,76 @@ public class FXMLLoginController{
 	 * @param userName The current user Input for name
 	 * @param passHash The Hashed Password
 	 * @return If credentials are correct.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	private Boolean isValidCredentials(String userName, String passHash) {
+	private Boolean isValidCredentials(String userName, String passHash) throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		try{Class.forName("com.mysql.jdbc.Driver");}catch(Exception e) {System.out.println("FAILED jdbc driver");}
+		try {
+		con=DriverManager.getConnection(
+		"jdbc:mysql://localhost:3306/mydb?characterEncoding=latin1&useConfigs=maxPerformance","root","Abcdefg123");
+		Statement stmt=con.createStatement();  
+		//CHECK LOGIN!!!
+		ResultSet rs=stmt.executeQuery("SELECT * FROM users WHERE UserID=" + userField.getText());  
+		while(rs.next()) {
+			if(rs.getString(5).matches(passHash)) {
+				roleNum= Integer.valueOf(rs.getString(2));
+				System.out.println("SUCCESS");
+				return true;
+				/*	When Successfully Logged in, check role number and display new screen based off of this*/
+			}
+			else {
+				System.out.println("Failed!");
+				return false;
+			}
+			//System.out.println(rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4)+rs.getString(5));
+		}
+		}
+		catch(Exception e) {
+			System.out.println("Server Connection Exception!");
+		}
 		return false;
 	}
 	
+	/**
+	 * @throws InterruptedException 
+	 * 
+	 */
+	private void failedAttempts() throws InterruptedException {
+		Thread.sleep(5000);
+		numAttempts=5;
+	}
+	public int getRole() {
+		return roleNum;
+	}
+	/**
+	 * Method that will switch to correct screen based on role...
+	 * @throws IOException 
+	 */
+	public Object switchHome() throws IOException {
+		switch(roleNum) {
+		case 0:{
+			System.out.println("Admin");
+			AdministratorController admin = new AdministratorController(stage,scene);
+			return admin.displayPage();
+		}
+		case 1:{
+			System.out.println("Doctor");
+			break;
+		}
+		case 2:{
+			System.out.println("Nurse");
+			break;
+		}
+		case 3:{
+			System.out.println("Lab Technician");
+			break;
+		}
+		}
+		return null;
+		//stage.hide();
+	}
 	
-
 }
