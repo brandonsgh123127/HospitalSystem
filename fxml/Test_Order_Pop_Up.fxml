@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="222.0" prefWidth="293.0" text="Order Test" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="374.0" prefWidth="288.0">
+         <children>
+            <TableView layoutX="46.0" layoutY="14.0" prefHeight="60.0" prefWidth="200.0">
+              <columns>
+                <TableColumn prefWidth="199.0" text="Patient Name" />
+              </columns>
+            </TableView>
+            <MenuButton layoutX="87.0" layoutY="98.0" mnemonicParsing="false" text="Select Test Type">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Red Blood Cell" />
+                <MenuItem mnemonicParsing="false" text="White Blood Cell" />
+                  <MenuItem mnemonicParsing="false" text="Liver Function" />
+                  <MenuItem mnemonicParsing="false" text="Renal Function" />
+                  <MenuItem mnemonicParsing="false" text="Electrolyte" />
+                  <MenuItem mnemonicParsing="false" text="X-Ray" />
+                  <MenuItem mnemonicParsing="false" text="Computed Tomography " />
+                  <MenuItem mnemonicParsing="false" text="Magnetic Resonance Image" />
+                  <MenuItem mnemonicParsing="false" text="Urinary Test" />
+                  <MenuItem mnemonicParsing="false" text="Stool Test" />
+              </items>
+            </MenuButton>
+            <Button layoutX="119.0" layoutY="140.0" mnemonicParsing="false" text="Submit" />
+         </children></AnchorPane>
+  </content>
+</TitledPane>
