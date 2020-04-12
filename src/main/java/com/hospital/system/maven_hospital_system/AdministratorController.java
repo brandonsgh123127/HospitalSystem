@@ -126,8 +126,10 @@ public class AdministratorController extends App implements Initializable{
 				((Staff_Model) e.getTableView().getItems().get(
                             e.getTablePosition().getRow())
                             ).setUserRole((e.getNewValue()));
+				System.out.println(tableContents.set(e.getTablePosition().getRow(), (Staff_Model) e.getTableView().getItems().get(
+                        e.getTablePosition().getRow())
+                        ).getUserRole());
 				System.out.println("ROLE CHANGE");
-				
 			}
 		});
 		lastName.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,String>>(){
@@ -136,6 +138,9 @@ public class AdministratorController extends App implements Initializable{
 				((Staff_Model) e.getTableView().getItems().get(
                             e.getTablePosition().getRow())
                             ).setLName((e.getNewValue()));
+				tableContents.set(e.getTablePosition().getRow(), (Staff_Model) e.getTableView().getItems().get(
+                        e.getTablePosition().getRow())
+                        );
 				System.out.println("LAST CHANGE");
 				
 			}
@@ -146,6 +151,9 @@ public class AdministratorController extends App implements Initializable{
 				((Staff_Model) e.getTableView().getItems().get(
                             e.getTablePosition().getRow())
                             ).setFName((e.getNewValue()));
+				tableContents.set(e.getTablePosition().getRow(), (Staff_Model) e.getTableView().getItems().get(
+                        e.getTablePosition().getRow())
+                        );
 				System.out.println("FIRST CHANGE");
 				
 			}
@@ -188,6 +196,12 @@ public class AdministratorController extends App implements Initializable{
                     }
                     saveButton.setText("Save Entry");
                     s.add(1);
+					try {
+						addStaff();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                 }
                 if(removeCheck.isSelected()) {
                 	submitButton.setText("Remove");
@@ -201,6 +215,13 @@ public class AdministratorController extends App implements Initializable{
                 }
                 	saveButton.setText("Remove Entry");
                 	s.add(2);
+					try {
+						removeStaff();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
                 }
                 //both unchecked
                 if(!addCheck.isSelected()&&!removeCheck.isSelected()) {
@@ -240,8 +261,14 @@ public class AdministratorController extends App implements Initializable{
         EventHandler<ActionEvent> addRemoveEvent = new EventHandler<ActionEvent>() { 
         public void handle(ActionEvent e) {
         	try {
-        		if(saveButton.getText().contentEquals("Save Entry"))
+        		if(saveButton.getText().contentEquals("Save Entry")) {
+        			try {
 					addEntry();
+        			}
+        			catch(Exception ex) {
+        				System.out.println("No Such Encryption Algorithm!");
+        			}
+        		}
 				if(saveButton.getText().contentEquals("Remove Entry")) {
 					System.out.println("Remove Entry");
 					removeEntry();
@@ -303,7 +330,8 @@ public class AdministratorController extends App implements Initializable{
 		while(rs.next()) {
 			System.out.println(rs.getInt(1)+ " " + rs.getInt(2)+ " " + rs.getString(3)+ " " + rs.getString(4));
 			userIDs.add(Integer.toString(rs.getInt(2)));
-			tableContents.add((new Staff_Model(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5))));	
+			if(rs.getInt(1)!= Integer.valueOf(identification) )
+					tableContents.add((new Staff_Model(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5))));	
 		}	
 		table.setItems(tableContents);
 		table.refresh();
@@ -321,7 +349,9 @@ public class AdministratorController extends App implements Initializable{
 	        }
 	    });	    
 	    fillDB();
-		tableContents.add(new Staff_Model(randomIDGen(),-1,"","",""));
+		hintLabel.setText("When Finished, Please Press Save");
+
+		tableContents.add(new Staff_Model(randomIDGen(),0,"","",""));
 		table.setItems(tableContents);
 	}
 	
@@ -346,7 +376,7 @@ public class AdministratorController extends App implements Initializable{
 				return newID;
 		}
 	
-	@FXML private void addEntry() throws SQLException{
+	@FXML private void addEntry() throws SQLException, NoSuchAlgorithmException{
 		//(1234,1,'Andrew','Jung','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',0)
 		Staff_Model temp =table.getSelectionModel().getSelectedItems().get(0);
 		try {
@@ -356,15 +386,22 @@ public class AdministratorController extends App implements Initializable{
 								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' ,'"+super.toHexString(getSHA(temp.getPass()))+"',0)");
 			stmt.execute();
 
-		} catch (NoSuchAlgorithmException | SQLException e) {
+		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}  
+		catch(SQLException e) {
+			System.out.println("Updating Entry..." +temp.getUserRole() + temp.getUserID());
+			PreparedStatement stmt=con.prepareStatement("UPDATE `users` SET FirstName = '" + temp.getFName() + "',LastName = '" + temp.getLName() + "',RoleID="
+														+temp.getUserRole()+", PassHash= " + temp.getPass() + ",  WHERE UserID="+temp.getUserID());
+			stmt.execute();
+			}
+		
 		fillDB();
 
 	}
 	@FXML private void removeEntry() throws SQLException {
-		PreparedStatement stmt=con.prepareStatement("DELETE * FROM users WHERE UserID="+table.getSelectionModel().getSelectedItems().get(0).getUserID());  
+		PreparedStatement stmt=con.prepareStatement("DELETE FROM users WHERE UserID="+table.getSelectionModel().getSelectedItems().get(0).getUserID());  
 		//REMOVES CURRENT USER
 		stmt.execute(); 
 		
