@@ -3,12 +3,14 @@ package com.hospital.system.maven_hospital_system;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
@@ -26,10 +28,11 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.sql.*;
+import java.util.ResourceBundle;
 
 
 
-public class FXMLLoginController<E>{
+public class FXMLLoginController<E> extends App implements Initializable{
 	private Stage stage;
 	private Scene scene;
 	private String passHash;
@@ -47,13 +50,17 @@ public class FXMLLoginController<E>{
 	private TextField userField;
 	@FXML
 	private GridPane grid;
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		System.out.println("Login Screen...");
+	}
 	/**
 	 * Constructor for Login Object
 	 * @param stage
 	 */
 	public FXMLLoginController(Stage stage){
 		this.stage = stage;
-		System.out.println("Login Screen...");
 	}
 	/**
 	 * Creation of Login Screen, contains enter key handler for login...
@@ -61,13 +68,7 @@ public class FXMLLoginController<E>{
 	 * @throws IOException If FXML not found...
 	 */
 	public Scene LoginScreen() throws IOException {
-		//stage.hide();
-		FXMLLoader loader = new FXMLLoader();
-		String path = System.getProperty("user.dir") + "\\fxml\\Login2.fxml";
-		System.out.println(path);
-		FileInputStream fxmlStream = new FileInputStream(path);
-		//Load the FXML file
-		Parent root = loader.load(fxmlStream);
+		replaceScreen("Login2.fxml", this.getClass());
 		//Listener for Enter Key//
 		root.setOnKeyPressed(new EventHandler<KeyEvent>()
 				{

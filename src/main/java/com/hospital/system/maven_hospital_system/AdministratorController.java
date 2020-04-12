@@ -31,7 +31,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
-public class AdministratorController implements Initializable{
+public class AdministratorController extends App implements Initializable{
 
 	private String identification;
 	@FXML
@@ -53,18 +53,6 @@ public class AdministratorController implements Initializable{
 	private List<Staff_Model> staff;
 	private Connection con;
 	//private Scene scene;
-	
-	public AdministratorController(Stage stage, Scene scene,Connection con,String identification) {
-	     assert table != null : "fx:id=\"table\" was not injected: check your FXML file 'Admin_Home.fxml'.";
-	     assert id != null : "fx:id=\"id\" was not injected: check your FXML file 'Admin_Home.fxml'.";
-	     this.stage = stage;
-		this.con=con;
-		this.identification=identification;
-		try{displayPage();}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		tableContents = FXCollections.<Staff_Model>observableArrayList();
@@ -79,18 +67,26 @@ public class AdministratorController implements Initializable{
 		last.setCellValueFactory(new PropertyValueFactory("fName"));
 		first.setCellValueFactory(new PropertyValueFactory("lName"));
 		table.setItems(tableContents);
+		System.out.println("Success");
 		table.refresh();
 		
 	}
 	
+	public AdministratorController(Stage stage, Scene scene,Connection con,String identification) {
+	     assert table != null : "fx:id=\"table\" was not injected: check your FXML file 'Admin_Home.fxml'.";
+	     assert id != null : "fx:id=\"id\" was not injected: check your FXML file 'Admin_Home.fxml'.";
+	     this.stage = stage;
+		this.con=con;
+		this.identification=identification;
+		try{displayPage();}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public Scene displayPage() throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		String path = System.getProperty("user.dir") + "\\fxml\\Admin_Home.fxml";
-		System.out.println(path);
-		FileInputStream fxmlStream = new FileInputStream(path);
 		//Load the FXML file
-		Parent root = loader.load(fxmlStream);
-		//this.scene = new Scene(root);
+		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Admin_Home.fxml"));		//this.scene = new Scene(root);
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
         stage.show();
@@ -105,6 +101,9 @@ public class AdministratorController implements Initializable{
 			System.out.println(rs.getInt(1)+ " " + rs.getInt(2)+ " " + rs.getString(3)+ " " + rs.getString(4));
 			tableContents.add((new Staff_Model((Integer)rs.getInt(1),(Integer)rs.getInt(2),rs.getString(3),rs.getString(4))));	
 		}	
+		table.setItems(tableContents);
+		table.refresh();
 	}
+	
 	
 }
