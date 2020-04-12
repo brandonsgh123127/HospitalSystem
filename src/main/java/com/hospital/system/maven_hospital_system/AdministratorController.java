@@ -4,10 +4,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -25,32 +29,47 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumnBase;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.converter.IntegerStringConverter;
 
 
 public class AdministratorController extends App implements Initializable{
 
+	private Callback<TableColumn<Staff_Model, String>, TableCell<Staff_Model, String>> cellFactory;
+	private Callback<TableColumn<Staff_Model, Integer>, TableCell<Staff_Model, Integer>> cellIntFactory;
+
+	
 	private String identification;
 	@FXML
 	private TableView<Staff_Model> table;
 	@FXML
-	private TableColumn<Staff_Model, String> last,first;
+	private TableColumn<Staff_Model, String> lastName,firstName;
 	@FXML
 	private TableColumn<Staff_Model,Integer> id,role;
+	@FXML
+	private TableColumn<Staff_Model,String> addRemoveColumn;
 	@FXML
 	private CheckBox addCheck,removeCheck;
 	@FXML
 	private Button submitButton;
+	@FXML
+	private Button saveButton;
+	@FXML
+	private Label hintLabel;
 	@FXML
 	private Stage stage;
 	@FXML
@@ -58,10 +77,27 @@ public class AdministratorController extends App implements Initializable{
 	@FXML
 	private ObservableList<Staff_Model> tableContents;
 	private Connection con;
+	private TableViewSelectionModel selectionModel;
+
+	//HashSet used for ID duplicates
+	private HashSet<String> userIDs = new HashSet<>();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		tableContents = FXCollections.<Staff_Model>observableArrayList();
+		TableViewSelectionModel selectionModel = table.getSelectionModel();
+		selectionModel.setSelectionMode(SelectionMode.SINGLE);
+
+		cellFactory = new Callback<TableColumn<Staff_Model, String>, TableCell<Staff_Model, String>>() {
+	                public TableCell call(TableColumn p) {
+	                    return new EditCell();
+	                }
+	    };
+		cellIntFactory = new Callback<TableColumn<Staff_Model, Integer>, TableCell<Staff_Model, Integer>>() {
+            public TableCell call(TableColumn p) {
+                return new EditIntCell();
+            }
+};
         try{
         	fillDB();
         }
@@ -70,13 +106,21 @@ public class AdministratorController extends App implements Initializable{
         }
 		id.setCellValueFactory(new PropertyValueFactory("userID"));
 		role.setCellValueFactory(new PropertyValueFactory("userRole"));
-		last.setCellValueFactory(new PropertyValueFactory("lName"));
-		first.setCellValueFactory(new PropertyValueFactory("fName"));
+		lastName.setCellValueFactory(new PropertyValueFactory("lName"));
+		firstName.setCellValueFactory(new PropertyValueFactory("fName"));
+		addRemoveColumn.setCellFactory(new Callback<TableColumn<Staff_Model,String>, TableCell<Staff_Model,String>>() {         
+	        @Override
+	        public TableCell<Staff_Model, String> call(TableColumn<Staff_Model, String> cell) {
+	            return new PasswordFieldCell();
+	        }
+	    });	    
+		addRemoveColumn.setCellValueFactory(new PropertyValueFactory("pass"));
 		table.setItems(tableContents);
 		System.out.println("Ouch");
 		table.refresh();
-		id.setEditable(true);
 		final Stack<Integer> s = new Stack<>();//stack for action event handler to manage check marks
+		s.push(1);
+
 		/*
 		 * Handler for Check box on admin page for adding and removing staff.
 		 */
@@ -90,7 +134,7 @@ public class AdministratorController extends App implements Initializable{
             	catch(EmptyStackException ex) {
             		System.out.println("EMPTY STACK");
             	}
-            	System.out.println("ACTION EVENT");
+            	System.out.println("ACTION EVENT CHECKBOX");
                 if (addCheck.isSelected()) { 
                     submitButton.setText("Add");
                     try {
@@ -100,6 +144,7 @@ public class AdministratorController extends App implements Initializable{
                     catch(EmptyStackException ex) {
                     	System.out.print("Stack empty");
                     }
+                    saveButton.setText("Save Entry");
                     s.add(1);
                 }
                 if(removeCheck.isSelected()) {
@@ -112,18 +157,37 @@ public class AdministratorController extends App implements Initializable{
                 	catch(EmptyStackException ex) {
                 		System.out.print("Stack empty");
                 }
+                	saveButton.setText("Remove Entry");
                 	s.add(2);
+                }
+                //both unchecked
+                if(!addCheck.isSelected()&&!removeCheck.isSelected()) {
+                	if(x==0) {
+                		s.push(1);
+                		addCheck.setSelected(true);
+                	}
+                	else if(x==1) {
+                		addCheck.setSelected(true);
+                	}
+                	else if(x==2) {
+                		removeCheck.setSelected(true);
+                	}
+                		
                 }
                 	
             }
 		};
         addCheck.setOnAction(checkEvent);
         removeCheck.setOnAction(checkEvent);
-        
+        //Event Handler When Add/Remove Button is Pressed
         EventHandler<ActionEvent> submitEvent = new EventHandler<ActionEvent>() { 
         public void handle(ActionEvent e) {
         	try {
-				addStaff();
+        		if(submitButton.getText().contentEquals("Add"))
+					addStaff();
+				if(submitButton.getText().contentEquals("Remove"))
+					removeStaff();
+						
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -131,6 +195,26 @@ public class AdministratorController extends App implements Initializable{
         }
         };
         submitButton.setOnAction(submitEvent);
+        EventHandler<ActionEvent> addRemoveEvent = new EventHandler<ActionEvent>() { 
+        public void handle(ActionEvent e) {
+        	try {
+        		if(saveButton.getText().contentEquals("Save Entry"))
+					addEntry();
+				if(saveButton.getText().contentEquals("Remove Entry")) {
+					System.out.println("Remove Entry");
+					removeEntry();
+				}
+						
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        }
+        };
+        saveButton.setOnAction(addRemoveEvent);
+        
+
+        
 		
 	}
 	/**
@@ -160,7 +244,7 @@ public class AdministratorController extends App implements Initializable{
 		//Load the FXML file
 		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("Admin_Home.fxml"));
 		loader.setController(this);
-		Parent root = loader.load();		//this.scene = new Scene(root);
+		Parent root = loader.load();
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
         stage.show();
@@ -170,25 +254,90 @@ public class AdministratorController extends App implements Initializable{
 	 * Method to populate the database on Admin Table.
 	 * @throws SQLException
 	 */
-	@FXML public void fillDB() throws SQLException {
+	@FXML private void fillDB() throws SQLException {
 		Statement stmt=con.createStatement();  
 		ResultSet rs=stmt.executeQuery("SELECT * FROM users"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
 			System.out.println(rs.getInt(1)+ " " + rs.getInt(2)+ " " + rs.getString(3)+ " " + rs.getString(4));
-			tableContents.add((new Staff_Model((Integer)rs.getInt(2),(Integer)rs.getInt(1),rs.getString(3),rs.getString(4))));	
+			userIDs.add(Integer.toString(rs.getInt(2)));
+			tableContents.add((new Staff_Model(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5))));	
 		}	
 		table.setItems(tableContents);
 		table.refresh();
 	}
 	
-	@FXML public void addStaff() throws SQLException{
+	@FXML private void addStaff() throws SQLException{
 		table.setEditable(true);
-		//tableContents.add(new Staff_Model(1,12,"fjad","adjak"));
+	    lastName.setCellFactory(TextFieldTableCell.forTableColumn());
+	    firstName.setCellFactory(TextFieldTableCell.forTableColumn());
+	    role.setCellFactory(TextFieldTableCell.<Staff_Model,Integer>forTableColumn(new IntegerStringConverter()));
+	    addRemoveColumn.setCellFactory(new Callback<TableColumn<Staff_Model,String>, TableCell<Staff_Model,String>>() {         
+	        @Override
+	        public TableCell<Staff_Model, String> call(TableColumn<Staff_Model, String> cell) {
+	            return new PasswordFieldCell();
+	        }
+	    });	    
+	    fillDB();
+		tableContents.add(new Staff_Model(randomIDGen(),-1,"","",""));
 		table.setItems(tableContents);
-		first.setCellFactory(new LocalStringCellFactory<>());
-		last.setCellFactory(new LocalStringCellFactory<>());
 	}
+	
+	@FXML private void removeStaff() throws SQLException{
+		table.setEditable(false);
+	    lastName.setCellFactory(cellFactory);
+	    firstName.setCellFactory(cellFactory);
+	    role.setCellFactory(cellIntFactory);///////
+		table.setItems(tableContents);
+		hintLabel.setText("Please Select the User to Remove, then Press 'Remove'");
+	}
+	/*
+	 * Generate New ID for user
+	 */
+		private int randomIDGen() {
+			Random ran = new Random();
+			int newID = ran.nextInt((int) Math.pow(2,12));
+			if(userIDs.contains(newID)) {
+				return randomIDGen();
+			}
+			else
+				return newID;
+		}
+	
+	@FXML private void addEntry() throws SQLException{
+		//(1234,1,'Andrew','Jung','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',0)
+		TablePosition pos = table.getSelectionModel().getSelectedCells().get(0);
+		int row = pos.getRow();
+		Staff_Model staff = table.getItems().get(row);
+		TableColumn col = pos.getTableColumn();
+		String data = (String) col.getCellObservableValue(staff).getValue();
+		tableContents.get(tableContents.size()-1).setFName(data);
+		Staff_Model temp =table.getSelectionModel().getSelectedItems().get(0);
+		try {
+			PreparedStatement stmt=con.prepareStatement("INSERT INTO `users` VALUES ("+temp.getUserID()
+								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' ,"+super.toHexString(getSHA(temp.getPass()))+")");
+			System.out.println("INSERT INTO `users` VALUES ("+temp.getUserID()
+								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' ,"+super.toHexString(getSHA(temp.getPass()))+")");
+			stmt.execute();
+
+		} catch (NoSuchAlgorithmException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+		fillDB();
+
+	}
+	@FXML private void removeEntry() throws SQLException {
+		PreparedStatement stmt=con.prepareStatement("DELETE * FROM users WHERE UserID="+table.getSelectionModel().getSelectedItems().get(0).getUserID());  
+		//REMOVES CURRENT USER
+		stmt.execute(); 
+		
+		tableContents.remove(table.getSelectionModel().getSelectedItems().get(0));
+		fillDB();
+			
+//		}
+	}
+	
 	
 	
 }

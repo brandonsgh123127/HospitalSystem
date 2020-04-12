@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
 
 
 
-public class FXMLLoginController<E> implements Initializable{
+public class FXMLLoginController<E> extends App implements Initializable{
 	private Stage stage;
 	private Scene scene;
 	private String passHash;
@@ -118,34 +118,7 @@ public class FXMLLoginController<E> implements Initializable{
 		userField = (TextField)scene.lookup("#userField");  
 		return scene;
 	}
-	/**
-	 * Hash Passwords for use within db matching...
-	 * @param input password input
-	 * @return SHA 256 in Byte format within array
-	 * @throws NoSuchAlgorithmException If algorithm not found...
-	 */
-	private byte[] getSHA(String input) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-		return md.digest(input.getBytes(StandardCharsets.UTF_8));
-	}
-	/**
-	 * Allow for return of string format of Bytes.
-	 * @param hash SHA 256 in array
-	 * @return String format of SHA 256
-	 */
-	private String toHexString(byte[] hash) {
-		BigInteger number = new BigInteger(1,hash);
-		//Converts to a hex value...
-		StringBuilder hexString = new StringBuilder(number.toString(16));
-		
-		//leading zeros to look pretty!
-		while(hexString.length() < 32)
-			hexString.insert(0, '0');
-		
-		return hexString.toString();
-		
-	}
-	
+
 	/**
 	 * TO BE IMPLEMENTED!!!  Allow to look up if user correctly inputted credentials...
 	 * @param userName The current user Input for name
