@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" text="Patient Visit" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="374.0" prefWidth="664.0">
+         <children>
+            <TableView layoutX="8.0" layoutY="6.0" prefHeight="53.0" prefWidth="490.0">
+              <columns>
+                <TableColumn prefWidth="116.0" text="Name" />
+                <TableColumn prefWidth="83.0" text="Date of Birth" />
+                  <TableColumn prefWidth="56.0" text="Gender" />
+                  <TableColumn minWidth="0.0" prefWidth="52.0" text="Room" />
+                  <TableColumn minWidth="0.0" prefWidth="104.0" text="Final Diagnosis" />
+                  <TableColumn minWidth="0.0" prefWidth="86.0" text="Doctor" />
+              </columns>
+            </TableView>
+            <Button layoutX="504.0" layoutY="20.0" mnemonicParsing="false" text="Visit History" />
+            <TreeTableView layoutX="7.0" layoutY="84.0" prefHeight="132.0" prefWidth="451.0">
+              <columns>
+                <TreeTableColumn prefWidth="114.0" text="Test" />
+                <TreeTableColumn prefWidth="56.0" text="Status" />
+                  <TreeTableColumn prefWidth="190.0" text="Result" />
+                  <TreeTableColumn prefWidth="90.0" text="View" />
+              </columns>
+            </TreeTableView>
+            <TextArea layoutX="465.0" layoutY="84.0" prefHeight="131.0" prefWidth="127.0" />
+            <Label layoutX="14.0" layoutY="67.0" text="Tests:" />
+            <Label layoutX="467.0" layoutY="67.0" text="Symptoms: " />
+            <Label layoutX="15.0" layoutY="224.0" text="Prescriptions:" />
+            <Label layoutX="465.0" layoutY="224.0" text="Notes:" />
+            <TreeTableView layoutX="6.0" layoutY="241.0" prefHeight="124.0" prefWidth="451.0">
+               <columns>
+                  <TreeTableColumn prefWidth="82.0" text="Medication" />
+                  <TreeTableColumn prefWidth="48.0" text="Dose" />
+                  <TreeTableColumn prefWidth="43.0" text="Count" />
+                  <TreeTableColumn prefWidth="75.0" text="Instructions" />
+                  <TreeTableColumn prefWidth="74.0" text="Date Given" />
+                  <TreeTableColumn prefWidth="42.0" text="Status" />
+                  <TreeTableColumn prefWidth="86.0" text="Prescribed By" />
+               </columns>
+            </TreeTableView>
+            <TextArea layoutX="465.0" layoutY="241.0" prefHeight="124.0" prefWidth="127.0" />
+         </children></AnchorPane>
+  </content>
+</TitledPane>

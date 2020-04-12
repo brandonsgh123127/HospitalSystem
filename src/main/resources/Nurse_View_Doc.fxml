@@ -5,23 +5,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" text="Doctor" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TitledPane collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" text="Home" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
             <VBox prefHeight="200.0" prefWidth="960.0">
                <children>
-                  <Label minHeight="100.0" text="My Patients">
+                  <Label minHeight="100.0" text="Patients">
                      <font>
                         <Font name="Segoe UI Bold" size="20.0" />
                      </font>
                   </Label>
                   <TableView maxWidth="850.0" prefHeight="800.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="patientName" prefWidth="200.0" text="Name" />
-                      <TableColumn fx:id="DOB" prefWidth="200.0" text="Date of Birth" />
-                        <TableColumn fx:id="patientGender" prefWidth="200.0" text="Gender" />
-                        <TableColumn fx:id="roomNum" prefWidth="200.0" text="Room" />
+                      <TableColumn prefWidth="200.0" text="Name" />
+                      <TableColumn prefWidth="200.0" text="Date of Birth" />
+                        <TableColumn prefWidth="200.0" text="Gender" />
+                        <TableColumn prefWidth="200.0" text="Room" />
                     </columns>
                   </TableView>
                </children>
@@ -35,15 +35,15 @@
                               <Font name="Segoe UI Bold" size="20.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="searchBar" promptText="Search" translateX="560.0" />
+                        <TextField promptText="Search" translateX="560.0" />
                      </children>
                   </HBox>
                   <TableView maxWidth="900.0" prefHeight="800.0" prefWidth="200.0">
                      <columns>
-                        <TableColumn fx:id="unPatientName" prefWidth="200.0" text="Name" />
-                        <TableColumn fx:id="unDOB" prefWidth="200.0" text="Date of Birth" />
-                        <TableColumn fx:id="unGender" prefWidth="200.0" text="Gender" />
-                        <TableColumn fx:id="unRoomNum" prefWidth="200.0" text="Room" />
+                        <TableColumn prefWidth="200.0" text="Name" />
+                        <TableColumn prefWidth="200.0" text="Date of Birth" />
+                        <TableColumn prefWidth="200.0" text="Gender" />
+                        <TableColumn prefWidth="200.0" text="Room" />
                         <TableColumn prefWidth="58.0" />
                      </columns>
                   </TableView>
