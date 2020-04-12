@@ -45,6 +45,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
+import javafx.scene.control.TableColumn.CellEditEvent;
+
 
 
 public class AdministratorController extends App implements Initializable{
@@ -108,6 +110,46 @@ public class AdministratorController extends App implements Initializable{
 		role.setCellValueFactory(new PropertyValueFactory("userRole"));
 		lastName.setCellValueFactory(new PropertyValueFactory("lName"));
 		firstName.setCellValueFactory(new PropertyValueFactory("fName"));
+		id.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,Integer>>(){
+			@Override
+			public void handle(CellEditEvent<Staff_Model, Integer> e) {
+				((Staff_Model) e.getTableView().getItems().get(
+                            e.getTablePosition().getRow())
+                            ).setUserID((e.getNewValue()));
+				System.out.println("ID CHANGE");
+				
+			}
+		});
+		role.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,Integer>>(){
+			@Override
+			public void handle(CellEditEvent<Staff_Model, Integer> e) {
+				((Staff_Model) e.getTableView().getItems().get(
+                            e.getTablePosition().getRow())
+                            ).setUserRole((e.getNewValue()));
+				System.out.println("ROLE CHANGE");
+				
+			}
+		});
+		lastName.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,String>>(){
+			@Override
+			public void handle(CellEditEvent<Staff_Model, String> e) {
+				((Staff_Model) e.getTableView().getItems().get(
+                            e.getTablePosition().getRow())
+                            ).setLName((e.getNewValue()));
+				System.out.println("LAST CHANGE");
+				
+			}
+		});
+		firstName.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,String>>(){
+			@Override
+			public void handle(CellEditEvent<Staff_Model, String> e) {
+				((Staff_Model) e.getTableView().getItems().get(
+                            e.getTablePosition().getRow())
+                            ).setFName((e.getNewValue()));
+				System.out.println("FIRST CHANGE");
+				
+			}
+		});
 		addRemoveColumn.setCellFactory(new Callback<TableColumn<Staff_Model,String>, TableCell<Staff_Model,String>>() {         
 	        @Override
 	        public TableCell<Staff_Model, String> call(TableColumn<Staff_Model, String> cell) {
@@ -306,18 +348,12 @@ public class AdministratorController extends App implements Initializable{
 	
 	@FXML private void addEntry() throws SQLException{
 		//(1234,1,'Andrew','Jung','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',0)
-		TablePosition pos = table.getSelectionModel().getSelectedCells().get(0);
-		int row = pos.getRow();
-		Staff_Model staff = table.getItems().get(row);
-		TableColumn col = pos.getTableColumn();
-		String data = (String) col.getCellObservableValue(staff).getValue();
-		tableContents.get(tableContents.size()-1).setFName(data);
 		Staff_Model temp =table.getSelectionModel().getSelectedItems().get(0);
 		try {
 			PreparedStatement stmt=con.prepareStatement("INSERT INTO `users` VALUES ("+temp.getUserID()
-								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' ,"+super.toHexString(getSHA(temp.getPass()))+")");
+								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' , '"+super.toHexString(getSHA(temp.getPass()))+"',0)");
 			System.out.println("INSERT INTO `users` VALUES ("+temp.getUserID()
-								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' ,"+super.toHexString(getSHA(temp.getPass()))+")");
+								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' ,'"+super.toHexString(getSHA(temp.getPass()))+"',0)");
 			stmt.execute();
 
 		} catch (NoSuchAlgorithmException | SQLException e) {
