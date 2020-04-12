@@ -12,14 +12,13 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
- * Hello world! SQL PASS: dv7&hH9#$6
+ * MAIN APPLICATION RUNNER, STARTS WITH LOGIN, WILL REDIRECT TO ANY CONTROLLER SPECIFIED! SQL PASS: dv7&hH9#$6
  *
  */
 public class App extends Application
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
         launch(args);
     }
     @Override

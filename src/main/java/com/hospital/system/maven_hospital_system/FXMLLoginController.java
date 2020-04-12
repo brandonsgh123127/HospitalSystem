@@ -34,6 +34,7 @@ public class FXMLLoginController<E>{
 	private Scene scene;
 	private String passHash;
 	private int roleNum=-1;
+	private int id;
 	
 	Connection con;
 
@@ -92,6 +93,9 @@ public class FXMLLoginController<E>{
 											System.out.println("You exceeded the attempts, try again soon...");
 											failedAttempts();
 										}
+									}
+									else {
+										switchHome();
 									}
 
 								} catch (Exception e) {
@@ -158,6 +162,7 @@ public class FXMLLoginController<E>{
 		while(rs.next()) {
 			if(rs.getString(5).matches(passHash)) {
 				roleNum= Integer.valueOf(rs.getString(2));
+				System.out.println("ROLE: " + roleNum);
 				System.out.println("SUCCESS");
 				return true;
 				/*	When Successfully Logged in, check role number and display new screen based off of this*/
@@ -194,8 +199,9 @@ public class FXMLLoginController<E>{
 		switch(roleNum) {
 		case 0:{
 			System.out.println("Admin");
-			AdministratorController admin = new AdministratorController(stage,scene);
-			return admin.displayPage();
+			AdministratorController admin = new AdministratorController(stage,scene,con,userField.getText());
+			//return admin.displayPage();
+			break;
 		}
 		case 1:{
 			System.out.println("Doctor");

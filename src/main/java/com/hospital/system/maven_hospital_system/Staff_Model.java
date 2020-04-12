@@ -5,32 +5,32 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Staff_Model {
 	
-	private SimpleIntegerProperty id;
-	private SimpleIntegerProperty role;
+	private SimpleIntegerProperty userID;
+	private SimpleIntegerProperty userRole;
 
 	private SimpleStringProperty fName;
 	private SimpleStringProperty lName;
 	
 	
 	public Staff_Model(Integer id, Integer role, String fName, String lName) {
-		this.id=new SimpleIntegerProperty(id);
-		this.role=new SimpleIntegerProperty(role);
+		this.userID=new SimpleIntegerProperty(id);
+		this.userRole=new SimpleIntegerProperty(role);
 		this.fName=new SimpleStringProperty(fName);
 		this.lName = new SimpleStringProperty(lName);
 	}
 
 	
-	public int getID() {
-		return id.get();
+	public int getUserID() {
+		return userID.get();
 	}
-	public void setID(int id) {
-		this.id=new SimpleIntegerProperty(id);
+	public void setUserID(int id) {
+		this.userID=new SimpleIntegerProperty(id);
 	}
-	public int getRole() {
-		return role.get();
+	public int getUserRole() {
+		return userRole.get();
 	}
-	public void setRole(Integer role) {
-		this.role=new SimpleIntegerProperty(role);
+	public void setUserRole(Integer role) {
+		this.userRole=new SimpleIntegerProperty(role);
 	}
 	public String getFName() {
 		return fName.get();
