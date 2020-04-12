@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
 
 
 
-public class FXMLLoginController<E> extends App implements Initializable{
+public class FXMLLoginController<E> implements Initializable{
 	private Stage stage;
 	private Scene scene;
 	private String passHash;
@@ -53,7 +53,7 @@ public class FXMLLoginController<E> extends App implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		System.out.println("Login Screen...");
+		
 	}
 	/**
 	 * Constructor for Login Object
@@ -61,6 +61,7 @@ public class FXMLLoginController<E> extends App implements Initializable{
 	 */
 	public FXMLLoginController(Stage stage){
 		this.stage = stage;
+		System.out.println("Login Screen...");
 	}
 	/**
 	 * Creation of Login Screen, contains enter key handler for login...
@@ -68,7 +69,10 @@ public class FXMLLoginController<E> extends App implements Initializable{
 	 * @throws IOException If FXML not found...
 	 */
 	public Scene LoginScreen() throws IOException {
-		replaceScreen("Login2.fxml", this.getClass());
+		//stage.hide();
+		FXMLLoader loader = new FXMLLoader();
+		//Load the FXML file
+		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Login2.fxml"));;
 		//Listener for Enter Key//
 		root.setOnKeyPressed(new EventHandler<KeyEvent>()
 				{

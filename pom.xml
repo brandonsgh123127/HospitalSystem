@@ -186,7 +186,9 @@
     </pluginManagement>
     <resources>
     	<resource>
-    		<directory>fxml</directory>
+    		<directory>
+    			src/main/resources
+    		</directory>
     	</resource>
     </resources>
   </build>
