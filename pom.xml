@@ -76,7 +76,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
+            <version>11.0.1</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -93,6 +93,11 @@
     <artifactId>mysql-connector-java</artifactId>
     <version>5.1.44</version>
 </dependency>
+  <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-archetype-fxml</artifactId>
+      <version>0.0.3</version>
+  </dependency>
   </dependencies>
 
   <build>
