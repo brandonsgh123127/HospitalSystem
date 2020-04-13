@@ -38,6 +38,7 @@ public class FXMLLoginController<E> extends App implements Initializable{
 	private String passHash;
 	private int roleNum=-1;
 	private int id;
+	private boolean isAdmin;
 	
 	Connection con;
 
@@ -140,6 +141,10 @@ public class FXMLLoginController<E> extends App implements Initializable{
 		while(rs.next()) {
 			if(rs.getString(5).matches(passHash)) {
 				roleNum= Integer.valueOf(rs.getString(2));
+				if(rs.getInt(6) ==1)
+					isAdmin = true;
+				else
+					isAdmin=false;
 				System.out.println("ROLE: " + roleNum);
 				System.out.println("SUCCESS");
 				return true;
@@ -176,10 +181,16 @@ public class FXMLLoginController<E> extends App implements Initializable{
 	public Object switchHome() throws IOException {
 		switch(roleNum) {
 		case 0:{
+			if(isAdmin) {
 			System.out.println("Admin");
 			AdministratorController admin = new AdministratorController(stage,scene,con,userField.getText());
-			//return admin.displayPage();
 			break;
+			}
+			else {
+				System.out.println("Secretary");
+				SecretaryController secretary = new SecretaryController(stage,scene,con);
+				break;
+			}
 		}
 		case 1:{
 			System.out.println("Doctor");

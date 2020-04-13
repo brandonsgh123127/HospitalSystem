@@ -158,6 +158,26 @@ public class AdministratorController extends App implements Initializable{
 				
 			}
 		});
+		addRemoveColumn.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,String>>(){
+			@Override
+			public void handle(CellEditEvent<Staff_Model, String> e) {
+				try {
+					((Staff_Model) e.getTableView().getItems().get(
+					            e.getTablePosition().getRow())
+					            ).setPass(e.getNewValue());
+					System.out.println("Pass = " +  e.getTableView().getItems().get(e.getTablePosition().getRow()).getPass());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				tableContents.set(e.getTablePosition().getRow(), (Staff_Model) e.getTableView().getItems().get(
+                        e.getTablePosition().getRow())
+                        );
+				System.out.println("Pass CHANGE");
+				
+			}
+		});
+
 		addRemoveColumn.setCellFactory(new Callback<TableColumn<Staff_Model,String>, TableCell<Staff_Model,String>>() {         
 	        @Override
 	        public TableCell<Staff_Model, String> call(TableColumn<Staff_Model, String> cell) {
@@ -262,19 +282,14 @@ public class AdministratorController extends App implements Initializable{
         public void handle(ActionEvent e) {
         	try {
         		if(saveButton.getText().contentEquals("Save Entry")) {
-        			try {
 					addEntry();
-        			}
-        			catch(Exception ex) {
-        				System.out.println("No Such Encryption Algorithm!");
-        			}
         		}
 				if(saveButton.getText().contentEquals("Remove Entry")) {
 					System.out.println("Remove Entry");
 					removeEntry();
 				}
 						
-			} catch (SQLException e1) {
+			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -348,11 +363,10 @@ public class AdministratorController extends App implements Initializable{
 	            return new PasswordFieldCell();
 	        }
 	    });	    
-	    fillDB();
+	    //fillDB();
 		hintLabel.setText("When Finished, Please Press Save");
-
 		tableContents.add(new Staff_Model(randomIDGen(),0,"","",""));
-		table.setItems(tableContents);
+		//table.setItems(tableContents);
 	}
 	
 	@FXML private void removeStaff() throws SQLException{
@@ -362,6 +376,7 @@ public class AdministratorController extends App implements Initializable{
 	    role.setCellFactory(cellIntFactory);///////
 		table.setItems(tableContents);
 		hintLabel.setText("Please Select the User to Remove, then Press 'Remove'");
+		fillDB();
 	}
 	/*
 	 * Generate New ID for user
@@ -381,33 +396,26 @@ public class AdministratorController extends App implements Initializable{
 		Staff_Model temp =table.getSelectionModel().getSelectedItems().get(0);
 		try {
 			PreparedStatement stmt=con.prepareStatement("INSERT INTO `users` VALUES ("+temp.getUserID()
-								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' , '"+super.toHexString(getSHA(temp.getPass()))+"',0)");
+								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' , '"+temp.getPass()+"',0)");
 			System.out.println("INSERT INTO `users` VALUES ("+temp.getUserID()
-								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' ,'"+super.toHexString(getSHA(temp.getPass()))+"',0)");
+								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' ,'"+temp.getPass()+"',0)");
 			stmt.execute();
-
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  
+		}
 		catch(SQLException e) {
 			System.out.println("Updating Entry..." +temp.getUserRole() + temp.getUserID());
 			PreparedStatement stmt=con.prepareStatement("UPDATE `users` SET FirstName = '" + temp.getFName() + "',LastName = '" + temp.getLName() + "',RoleID="
-														+temp.getUserRole()+", PassHash= " + temp.getPass() + ",  WHERE UserID="+temp.getUserID());
+														+temp.getUserRole()+", PassHash= '" + temp.getPass() + "'  where UserID = "+temp.getUserID());
 			stmt.execute();
 			}
 		
 		fillDB();
-
 	}
 	@FXML private void removeEntry() throws SQLException {
 		PreparedStatement stmt=con.prepareStatement("DELETE FROM users WHERE UserID="+table.getSelectionModel().getSelectedItems().get(0).getUserID());  
 		//REMOVES CURRENT USER
 		stmt.execute(); 
-		
 		tableContents.remove(table.getSelectionModel().getSelectedItems().get(0));
 		fillDB();
-			
 //		}
 	}
 	
