@@ -45,11 +45,12 @@ public class SecretaryController extends App implements Initializable{
 		lName.setCellValueFactory(new PropertyValueFactory("lName"));
 		fName.setCellValueFactory(new PropertyValueFactory("fName"));
 		DOB.setCellValueFactory(new PropertyValueFactory("DOB"));
+		
 	    addUser.setOnAction(
 		        new EventHandler<ActionEvent>() {
 		            @Override
 		            public void handle(ActionEvent event) {
-		            	AddVisitor add = new AddVisitor(stage);
+		            	AddVisitor add = new AddVisitor(stage,con);
 		            	final Stage dialog = add.display();
 		            	
 

@@ -119,6 +119,12 @@ public class Visitor_Model{
 		public void setInsuranceID(String insuranceID) {
 			this.insuranceID=new SimpleStringProperty(insuranceID);
 		}
+		public String getDOB() {
+			return DOB.get();
+		}
+		public void setDOB(String DOB) {
+			this.DOB=new SimpleStringProperty(DOB);
+		}
 		public String getInsuranceProvider() {
 			return insuranceProvider.get();
 		}
