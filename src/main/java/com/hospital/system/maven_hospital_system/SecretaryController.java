@@ -5,6 +5,8 @@ import java.net.URL;
 import java.sql.Connection;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +17,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class SecretaryController extends App implements Initializable{
@@ -33,10 +38,24 @@ public class SecretaryController extends App implements Initializable{
 	@Override
 	
 	//USER- 3270  PASS = gru
+	/*
+	 * Initialize for adding new patients... 
+	 */
 	public void initialize(URL location, ResourceBundle resources) {
 		lName.setCellValueFactory(new PropertyValueFactory("lName"));
 		fName.setCellValueFactory(new PropertyValueFactory("fName"));
 		DOB.setCellValueFactory(new PropertyValueFactory("DOB"));
+	    addUser.setOnAction(
+		        new EventHandler<ActionEvent>() {
+		            @Override
+		            public void handle(ActionEvent event) {
+		            	AddVisitor add = new AddVisitor(stage);
+		            	final Stage dialog = add.display();
+		            	
+
+		            }
+		         });
+
 	}
 	/**
 	 * Constructor for Seccretary control object, populate values
@@ -68,6 +87,10 @@ public class SecretaryController extends App implements Initializable{
 		stage.setScene(scene);
         stage.show();
 		return scene;
+	}
+	
+	@FXML private void addVisitor() {
+	 
 	}
 
 }
