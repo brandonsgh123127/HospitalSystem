@@ -7,8 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"">
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TitledPane collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1920.0" prefWidth="1920.0" text=" ">
         <content>
@@ -69,6 +68,19 @@
                                                          </children>
                                                       </HBox>
                                                       <Button fx:id="submitButton" mnemonicParsing="false" text="Add" />
+                                                      <Label fx:id="hintLabel" text="When Finished, Please Press Save">
+                                                         <font>
+                                                            <Font name="Segoe UI Bold Italic" size="20.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets top="15.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Button fx:id="saveButton" mnemonicParsing="false" text="Save Entry">
+                                                         <VBox.margin>
+                                                            <Insets top="15.0" />
+                                                         </VBox.margin>
+                                                      </Button>
                                                    </children>
                                                 </VBox>
                                              </children>

@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS `mydb`.`Tests` (
+  `TestID` INT NOT NULL,
+  `VisitID` INT NOT NULL,
+  `TestTypeID` INT NOT NULL,
+  `TechID` INT NULL,
+  `Result` LONGTEXT NULL,
+  `ResultImg` LONGBLOB NULL,
+  PRIMARY KEY (`TestID`))
+ENGINE = InnoDB;

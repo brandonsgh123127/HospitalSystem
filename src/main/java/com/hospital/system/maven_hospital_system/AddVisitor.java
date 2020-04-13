@@ -92,7 +92,8 @@ public class AddVisitor implements Initializable{
 		    @Override 
 		    public void handle(MouseEvent event) {  //double click on user to change info...
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {    //TABLE VIEWS!!
-		        	PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID);
+		        	System.out.println(userID);
+		        	PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID,((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 		        }
 		    }
 		});
@@ -265,7 +266,7 @@ public class AddVisitor implements Initializable{
 			ResultSet rs=stmt.executeQuery("SELECT * FROM visits WHERE PatientID = "+ userID); 
 			while(rs.next()) {
 				System.out.println("Prior visits.");
-				tableContents.add(new Visit_Model(rs.getString(2),rs.getString(3),rs.getInt(5),rs.getString(7)));
+				tableContents.add(new Visit_Model(rs.getString(2),rs.getString(3),rs.getInt(5),rs.getString(7),rs.getInt(1)));
 			}
 			}
 			catch(NullPointerException e) {
