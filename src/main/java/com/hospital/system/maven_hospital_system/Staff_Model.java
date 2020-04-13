@@ -17,7 +17,9 @@ public class Staff_Model {
 	private SimpleStringProperty lName;
 	private SimpleStringProperty pass;
 	
-	
+	/*
+	 * Model to Construct new Staff
+	 */
 	public Staff_Model(Integer id, Integer role, String fName, String lName,String pass) {
 		this.userID=new SimpleIntegerProperty(id);
 		this.userRole=new SimpleIntegerProperty(role);

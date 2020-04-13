@@ -27,7 +27,9 @@ public class Visitor_Model{
 		private SimpleStringProperty insuranceID;
 		private SimpleStringProperty insuranceProvider;
 		
-		
+		/*
+		 * Model to Create New Visitor
+		 */
 		public Visitor_Model(Integer id, String fName, String lName, String DOB,String address, String city, String state, String zip, String email, String phone,String country, Boolean isResident, String insuranceID,String insuranceProvider) {
 			this.userID=new SimpleIntegerProperty(id);
 			this.fName=new SimpleStringProperty(fName);
