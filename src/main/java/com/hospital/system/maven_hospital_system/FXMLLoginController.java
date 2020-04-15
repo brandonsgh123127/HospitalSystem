@@ -40,7 +40,7 @@ public class FXMLLoginController<E> extends App implements Initializable{
 	private int id;
 	private boolean isAdmin;
 	
-	Connection con;
+	private Connection con;
 
 	
 	private int numAttempts=5;
@@ -178,7 +178,7 @@ public class FXMLLoginController<E> extends App implements Initializable{
 	 * Method that will switch to correct screen based on role...
 	 * @throws IOException 
 	 */
-	public Object switchHome() throws IOException {
+	private Object switchHome() throws IOException {
 		switch(roleNum) {
 		case 0:{
 			if(isAdmin) {

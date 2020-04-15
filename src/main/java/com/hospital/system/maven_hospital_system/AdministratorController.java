@@ -324,7 +324,7 @@ public class AdministratorController extends App implements Initializable{
 	 * @return The new scene created for eaasy access.
 	 * @throws IOException
 	 */
-	public Scene displayPage() throws IOException {
+	private Scene displayPage() throws IOException {
 		//Load the FXML file
 		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("Admin_Home.fxml"));
 		loader.setController(this);

@@ -68,6 +68,7 @@ public class AddVisitor implements Initializable{
 		fields = new ArrayList<>();
 		this.origStage = stage;
 		dialog = new Stage();
+		display();
 		
 	}
 	public AddVisitor(Stage stage, Connection con, Integer userID) {
@@ -76,7 +77,7 @@ public class AddVisitor implements Initializable{
 		fields = new ArrayList<>();
 		this.origStage = stage;
 		dialog = new Stage();
-		
+		display();
 	}
 
 	@Override
@@ -137,8 +138,10 @@ public class AddVisitor implements Initializable{
 		            	}
 		            }
 		         });
+				
 	}
-	public Stage display() {
+	public Stage getDisplay() {return dialog;}
+	public void display() {
 	     dialog.initModality(Modality.NONE);
          dialog.initOwner(origStage);
  		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("Patient_Information.fxml"));
@@ -148,13 +151,12 @@ public class AddVisitor implements Initializable{
 				root = loader.load();
      		Scene scene = new Scene(root);
      		dialog.setScene(scene);
-     		updateTable();
      		dialog.show();
+     		updateTable();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		return dialog;
 	}
 	/**
 	 * Add New/Existing Users to DB
@@ -179,7 +181,7 @@ public class AddVisitor implements Initializable{
 			}
 			try {
 				PreparedStatement stmt;
-				if(temp.isResident()) {
+				if(temp.isResident()) { //If resident, execute
 					stmt=con.prepareStatement("INSERT INTO `Patients` VALUES ("+temp.getUserID()+
 									",'"+temp.getLName()+"', '"+temp.getFName()+"' , '"+temp.getAddress()+"', '" + temp.getCity()+ "' , '"
 									+ temp.getState() + "' , '" + temp.getZip() + "' , '"+ temp.getPhone()  + "' , '" + temp.getEmail()+ "' , '" + temp.getDOB()+ "' , '" + 
@@ -189,7 +191,7 @@ public class AddVisitor implements Initializable{
 							+ temp.getState() + "' , '" + temp.getZip() + "' , '"+ temp.getPhone()  + "' , '" + temp.getEmail()+ "' , '" + temp.getDOB()+ "' , '" + 
 							"United States" + "' , " + "1" + " , '"+ temp.getInsuranceID() + "' , '" + temp.getInsuranceProvider() + "')");
 				}
-				else {
+				else {//else
 					stmt=con.prepareStatement("INSERT INTO `Patients` VALUES ("+temp.getUserID()+
 							", '"+temp.getLName()+"' , '"+temp.getFName()+"' , '"+temp.getAddress()+"', '" + temp.getCity()+ "' , '"
 							+ temp.getState() + "' , '" + temp.getZip() + "' , '"+ temp.getPhone()  + "' , '" + temp.getEmail()+ "' , '" + temp.getDOB()+ "' , '" + 
@@ -201,17 +203,17 @@ public class AddVisitor implements Initializable{
 					
 				}
 					stmt.execute();
-			}
+			} //IF ENTRY already exists, update the information through query
 			catch(SQLException e) {
 				System.out.println("Updating Entry..." +temp.getUserID());
-				PreparedStatement stmt=con.prepareStatement("UPDATE `Patients` SET lName = '" + temp.getFName() + "',lName = '" + temp.getLName() + "', Address= '"
+				PreparedStatement stmt=con.prepareStatement("UPDATE `Patients` SET lName = '" + temp.getLName() + "',fName = '" + temp.getFName() + "', Address= '"
 															+temp.getAddress()+"' , City= '" + temp.getCity() + "' , State= '" + temp.getState() + "' , Zip = '" +
 															temp.getZip() + "' , Phone = '" + temp.getPhone() + "' , Email = '" + temp.getEmail() + "' , Country = " +
 															"'United States" + "' , insuranceID = '" + temp.getInsuranceID() + "' , insuranceProvider = '" + temp.getInsuranceProvider()
 															+ "' where patientID = "+temp.getUserID());
 				stmt.execute();
 				}
-			updateTable();
+			dialog.hide();
 			dialog.close();
 		}
 		
@@ -231,7 +233,7 @@ public class AddVisitor implements Initializable{
 				return (newID);
 		}
 		
-		public void updateTable() throws SQLException {
+		private void updateTable() throws SQLException {
 			Statement stmt=con.createStatement();
 			//First Update Text Fields
 			try {
@@ -277,7 +279,7 @@ public class AddVisitor implements Initializable{
 
 		}
 		
-		public static final LocalDate LOCAL_DATE (String dateString){
+		private static final LocalDate LOCAL_DATE (String dateString){
 		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		    LocalDate localDate = LocalDate.parse(dateString, formatter);
 		    return localDate;

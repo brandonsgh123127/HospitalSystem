@@ -35,7 +35,7 @@ import javafx.stage.WindowEvent;
  * @author spada
  *
  */
-public class SecretaryController extends App implements Initializable{
+public class SecretaryController implements Initializable{
 
 	private Stage stage,dialog;
 	private Scene scene;
@@ -65,7 +65,19 @@ public class SecretaryController extends App implements Initializable{
 		    public void handle(MouseEvent event) {  //double click on user to change info...
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
 		        	AddVisitor add = new AddVisitor(stage,con,((Visitor_Model) table.getSelectionModel().getSelectedItems().get(0)).getUserID());
-	            	dialog = add.display();
+	            	dialog = add.getDisplay();
+	            	dialog.setOnHidden( new EventHandler<WindowEvent>() {
+	        			@Override
+	        			public void handle(WindowEvent event) {
+	        				try {
+	        					System.out.println("Update table sec");
+	        					updateDataTable();
+	        				} catch (SQLException e) {
+	        					// TODO Auto-generated catch block
+	        					e.printStackTrace();
+	        				}	
+	        			}});           		
+
 		        }
 		    }
 		});
@@ -76,29 +88,10 @@ public class SecretaryController extends App implements Initializable{
 		            @Override
 		            public void handle(ActionEvent event) {
 		            	AddVisitor add = new AddVisitor(stage,con);
-		            	dialog = add.display();
-		            	dialog.setOnCloseRequest( new EventHandler<WindowEvent>() {
-
-							@Override
-							public void handle(WindowEvent event) {
-								try {
-									System.out.println("Update table sec");
-									updateDataTable();
-								} catch (SQLException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								
-							}
-
-		            	
-		            	}
-		            	);
+		            	dialog = add.getDisplay();
 		            }
 		         });
-	    
-
-	}
+	    		}
 	/**
 	 * Constructor for Seccretary control object, populate values
 	 * @param stage current stage to be displayed
@@ -120,7 +113,7 @@ public class SecretaryController extends App implements Initializable{
 	 * @return The new scene created for eaasy access.
 	 * @throws IOException
 	 */
-	public Scene displayPage() throws IOException {
+	private Scene displayPage() throws IOException {
 		//Load the FXML file
 		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("Search_Page.fxml"));
 		loader.setController(this);
@@ -137,24 +130,25 @@ public class SecretaryController extends App implements Initializable{
 		return scene;
 	}
 	
-	public void updateDataTable() throws SQLException{
+	private void updateDataTable() throws SQLException{
 		Statement stmt=con.createStatement();
 		ResultSet rs=stmt.executeQuery("SELECT * FROM Patients"); 
 		tableContents=FXCollections.observableArrayList();
 		table.setItems(tableContents);
 		while(rs.next()) {
-			boolean res;
+			boolean res; //Boolean needed for adding data to table...  if resident or not
 			if(rs.getInt(12) ==1)
 				res=true;
 			else
 				res=false;
-			try {
-			tableContents.add(new Visitor_Model(rs.getInt(1),rs.getString(3),rs.getString(2),rs.getString(10),
+			try { //Update secretary home table--> List of all patients
+				tableContents.add(new Visitor_Model(rs.getInt(1),rs.getString(3),rs.getString(2),rs.getString(10),
 						rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(9),rs.getString(8),rs.getString(11),res,
 						rs.getString(13),rs.getString(14)));
 			}
 			catch(SQLException e) {
 				System.err.println("An error occurred while adding values to table!");
+				break;
 			}
 		}
 		table.setItems(tableContents);

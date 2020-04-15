@@ -124,6 +124,7 @@ public class PatientVisit_Controller implements Initializable {
 	 * Updates the Test and Prescription Tables...
 	 */
 	private void updateTables() {
+		
 		try {
 			System.out.println("Update test table");
 		Statement stmt=con.createStatement();
@@ -161,7 +162,7 @@ public class PatientVisit_Controller implements Initializable {
 			prescriptions.refresh();
 
 	}
-	public static final LocalDate LOCAL_DATE (String dateString){
+	private static final LocalDate LOCAL_DATE (String dateString){
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    LocalDate localDate = LocalDate.parse(dateString, formatter);
 	    return localDate;
