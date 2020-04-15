@@ -15,7 +15,7 @@ SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg,p3.TestType
          ON p1.patientID= 4043 AND p2.patientID=4043 ;
 select * from prescriptiontypes;
 select * from visits;
-select * from patients;
+select * from Patients;
 select * from tests;
 SELECT p1.PrescriptionID, p1.VisitID, p1.PrescriptionTypeID, p1.Dosage, p1.Instructions, p3.PrescriptionType,p2.Date
 FROM prescriptions AS p1 INNER JOIN visits AS p2 INNER JOIN prescriptiontypes as p3
