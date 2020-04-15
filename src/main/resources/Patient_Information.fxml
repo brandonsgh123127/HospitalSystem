@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -10,14 +11,14 @@
          <children>
             <TextField fx:id="fName" layoutX="111.0" layoutY="14.0" />
             <TextField fx:id="lName" layoutX="111.0" layoutY="52.0" />
-            <TextField fx:id="Address" layoutX="111.0" layoutY="91.0" />
-            <TextField fx:id="City" layoutX="111.0" layoutY="131.0" />
-            <TextField fx:id="State" layoutX="111.0" layoutY="175.0" />
-            <TextField fx:id="Zip" layoutX="111.0" layoutY="214.0" />
-            <TextField fx:id="Phone" layoutX="111.0" layoutY="255.0" />
-            <TextField fx:id="Email" layoutX="111.0" layoutY="295.0" />
-            <TextField fx:id="InsuranceCarrier" layoutX="377.0" layoutY="14.0" />
-            <TextField fx:id="InsuranceID" layoutX="377.0" layoutY="52.0" />
+            <TextField fx:id="address" layoutX="111.0" layoutY="91.0" />
+            <TextField fx:id="city" layoutX="111.0" layoutY="131.0" />
+            <TextField fx:id="state" layoutX="111.0" layoutY="175.0" />
+            <TextField fx:id="zip" layoutX="111.0" layoutY="214.0" />
+            <TextField fx:id="phone" layoutX="111.0" layoutY="255.0" />
+            <TextField fx:id="email" layoutX="111.0" layoutY="295.0" />
+            <TextField fx:id="insuranceCarrier" layoutX="377.0" layoutY="14.0" />
+            <TextField fx:id="insuranceID" layoutX="377.0" layoutY="52.0" />
             <Label layoutX="21.0" layoutY="18.0" text="First Name:" />
             <Label layoutX="20.0" layoutY="56.0" text="Last Name: " />
             <Label layoutX="26.0" layoutY="95.0" text="Address:" />
@@ -30,18 +31,23 @@
             <Label layoutX="274.0" layoutY="18.0" text="Insurance Carrier:" />
             <Label layoutX="291.0" layoutY="56.0" text="Insurance ID: " />
             <Label layoutX="296.0" layoutY="95.0" text="U.S. Citizen:" />
-            <CheckBox fx:id="YesCitizen" layoutX="396.0" layoutY="95.0" mnemonicParsing="false" text="Yes" />
-            <CheckBox fx:id="NoCitizen" layoutX="473.0" layoutY="95.0" mnemonicParsing="false" text="No" />
-            <TreeTableView layoutX="301.0" layoutY="159.0" prefHeight="200.0" prefWidth="288.0">
-              <columns>
-                <TreeTableColumn fx:id="DateColumn" prefWidth="53.0" text="Date:" />
-                <TreeTableColumn fx:id="ReasonColumn" prefWidth="108.0" text="Reason for Visit: " />
-                  <TreeTableColumn fx:id="DoctorColumn" prefWidth="62.0" text="Doctor: " />
-                  <TreeTableColumn fx:id="MoreColumn" prefWidth="66.0" text="More:" />
-              </columns>
-            </TreeTableView>
+            <CheckBox fx:id="yesCitizen" layoutX="396.0" layoutY="95.0" mnemonicParsing="false" text="Yes" />
+            <CheckBox fx:id="noCitizen" layoutX="473.0" layoutY="95.0" mnemonicParsing="false" text="No" />
             <Label layoutX="299.0" layoutY="127.0" text="Visit History: " />
             <DatePicker fx:id="DOB" layoutX="111.0" layoutY="338.0" />
+            <TableView fx:id="table" layoutX="291.0" layoutY="168.0" prefHeight="200.0" prefWidth="288.0">
+              <columns>
+                <TableColumn fx:id="dateColumn" prefWidth="75.0" text="Date" />
+                <TableColumn fx:id="reasonColumn" prefWidth="75.0" text="Reason for Visit:" />
+                  <TableColumn fx:id="doctorColumn" prefWidth="75.0" text="Doctor:" />
+                  <TableColumn fx:id="moreColumn" prefWidth="75.0" text="More..." />
+              </columns>
+            </TableView>
+            <Button fx:id="submitButton" layoutX="517.0" layoutY="129.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="62.0" text="Save">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
          </children></AnchorPane>
   </content>
 </TitledPane>

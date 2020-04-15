@@ -3,12 +3,14 @@ package com.hospital.system.maven_hospital_system;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
@@ -26,16 +28,19 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import java.sql.*;
+import java.util.ResourceBundle;
 
 
 
-public class FXMLLoginController<E>{
+public class FXMLLoginController<E> extends App implements Initializable{
 	private Stage stage;
 	private Scene scene;
 	private String passHash;
 	private int roleNum=-1;
+	private int id;
+	private boolean isAdmin;
 	
-	Connection con;
+	private Connection con;
 
 	
 	private int numAttempts=5;
@@ -46,6 +51,11 @@ public class FXMLLoginController<E>{
 	private TextField userField;
 	@FXML
 	private GridPane grid;
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		
+	}
 	/**
 	 * Constructor for Login Object
 	 * @param stage
@@ -62,11 +72,8 @@ public class FXMLLoginController<E>{
 	public Scene LoginScreen() throws IOException {
 		//stage.hide();
 		FXMLLoader loader = new FXMLLoader();
-		String path = System.getProperty("user.dir") + "\\fxml\\Login2.fxml";
-		System.out.println(path);
-		FileInputStream fxmlStream = new FileInputStream(path);
 		//Load the FXML file
-		Parent root = loader.load(fxmlStream);
+		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Login2.fxml"));;
 		//Listener for Enter Key//
 		root.setOnKeyPressed(new EventHandler<KeyEvent>()
 				{
@@ -93,6 +100,9 @@ public class FXMLLoginController<E>{
 											failedAttempts();
 										}
 									}
+									else {
+										switchHome();
+									}
 
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
@@ -109,34 +119,7 @@ public class FXMLLoginController<E>{
 		userField = (TextField)scene.lookup("#userField");  
 		return scene;
 	}
-	/**
-	 * Hash Passwords for use within db matching...
-	 * @param input password input
-	 * @return SHA 256 in Byte format within array
-	 * @throws NoSuchAlgorithmException If algorithm not found...
-	 */
-	private byte[] getSHA(String input) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-		return md.digest(input.getBytes(StandardCharsets.UTF_8));
-	}
-	/**
-	 * Allow for return of string format of Bytes.
-	 * @param hash SHA 256 in array
-	 * @return String format of SHA 256
-	 */
-	private String toHexString(byte[] hash) {
-		BigInteger number = new BigInteger(1,hash);
-		//Converts to a hex value...
-		StringBuilder hexString = new StringBuilder(number.toString(16));
-		
-		//leading zeros to look pretty!
-		while(hexString.length() < 32)
-			hexString.insert(0, '0');
-		
-		return hexString.toString();
-		
-	}
-	
+
 	/**
 	 * TO BE IMPLEMENTED!!!  Allow to look up if user correctly inputted credentials...
 	 * @param userName The current user Input for name
@@ -158,6 +141,11 @@ public class FXMLLoginController<E>{
 		while(rs.next()) {
 			if(rs.getString(5).matches(passHash)) {
 				roleNum= Integer.valueOf(rs.getString(2));
+				if(rs.getInt(6) ==1)
+					isAdmin = true;
+				else
+					isAdmin=false;
+				System.out.println("ROLE: " + roleNum);
 				System.out.println("SUCCESS");
 				return true;
 				/*	When Successfully Logged in, check role number and display new screen based off of this*/
@@ -190,12 +178,19 @@ public class FXMLLoginController<E>{
 	 * Method that will switch to correct screen based on role...
 	 * @throws IOException 
 	 */
-	public Object switchHome() throws IOException {
+	private Object switchHome() throws IOException {
 		switch(roleNum) {
 		case 0:{
+			if(isAdmin) {
 			System.out.println("Admin");
-			AdministratorController admin = new AdministratorController(stage,scene);
-			return admin.displayPage();
+			AdministratorController admin = new AdministratorController(stage,scene,con,userField.getText());
+			break;
+			}
+			else {
+				System.out.println("Secretary");
+				SecretaryController secretary = new SecretaryController(stage,scene,con);
+				break;
+			}
 		}
 		case 1:{
 			System.out.println("Doctor");

@@ -65,10 +65,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Visits` (
   `VisitID` INT NOT NULL,
+  `Date` VARCHAR(10)NULL,
+  `Reason` VARCHAR(100)NULL,
   `PatientID` INT NULL,
   `PhysicianID` INT NULL,
   `followUpID` INT NULL,
-  `Visitscol` VARCHAR(45) NULL,
+  `Results` VARCHAR(100) null,
   PRIMARY KEY (`VisitID`))
 ENGINE = InnoDB;
 
@@ -77,22 +79,24 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Patients`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Patients` (
-  `PatientID` INT NOT NULL,
-  `FirstName` VARCHAR(45) NULL,
-  `MiddleName` VARCHAR(45) NULL,
-  `LastName` VARCHAR(45) NULL,
-  `DOB` DATE NULL,
-  `InsuranceID` INT NULL,
-  `AddressLine1` VARCHAR(45) NULL,
-  `AddressLine2` VARCHAR(45) NULL,
+  `patientID` INT NOT NULL,
+  `lName` VARCHAR(45) NULL,
+  `fName` VARCHAR(45) NULL,
+  `Address` VARCHAR(65) NULL,
   `City` VARCHAR(45) NULL,
   `State` VARCHAR(45) NULL,
-  `ZipCode` VARCHAR(10) NULL,
-  `PhoneNumber` VARCHAR(45) NULL,
-  `EmailAddress` VARCHAR(45) NULL,
-  PRIMARY KEY (`PatientID`))
-ENGINE = InnoDB
-COMMENT = '		';
+  `Zip` VARCHAR(6) NULL,
+  `Phone` VARCHAR(10) NULL,
+  `Email` VARCHAR(55) NULL,
+  `DateOfBirth` VARCHAR(45) NULL,
+  `Country` VARCHAR(45) NULL,
+  `isResident` TINYINT NULL,
+  `insuranceID` VARCHAR(55) NULL,
+  `insuranceProvider` VARCHAR(45) NULL,
+  PRIMARY KEY (`patientID`))
+ENGINE = InnoDB;
+
+
 
 
 -- -----------------------------------------------------
@@ -156,3 +160,9 @@ COMMENT = '	';
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+show tables from mydb;
+use mydb;
+-- Insert Default Users, 1234 admin, 3270 root
+INSERT INTO `users` VALUES (1234,0,'Andrew','Jung','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',1),(3270,0,'John','Smith','4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2',0);
