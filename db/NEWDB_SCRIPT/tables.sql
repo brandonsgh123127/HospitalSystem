@@ -166,3 +166,7 @@ show tables from mydb;
 use mydb;
 -- Insert Default Users, 1234 admin, 3270 root
 INSERT INTO `users` VALUES (1234,0,'Andrew','Jung','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',1),(3270,0,'John','Smith','4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2',0);
+INSERT INTO prescriptiontypes VALUES(1,'Depressant'),(2,'Stimulant'),(3,'Opiod');
+INSERT INTO patients VALUES(4043,'Smith','John','2 Apple Hill','Cupertino','CA','99999','3109019902','smith@applehill.com','2020-04-08','United States',1,'192-29439','aet');
+INSERT INTO roles VALUES(0,'Staff'),(2,'Doctor'),(3,'Nurse'),(4,'Patient');
+INSERT INTO visits VALUES(1,'04-15-2015','Back',40403,1234,2,'Skoliosis');
