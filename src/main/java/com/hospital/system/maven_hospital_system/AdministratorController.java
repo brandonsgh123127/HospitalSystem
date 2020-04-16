@@ -59,7 +59,7 @@ public class AdministratorController extends App implements Initializable{
 	@FXML
 	private TableView<Staff_Model> table;
 	@FXML
-	private TableColumn<Staff_Model, String> lastName,firstName;
+	private TableColumn<Staff_Model, String> last,first;
 	@FXML
 	private TableColumn<Staff_Model,Integer> id,role;
 	@FXML
@@ -108,8 +108,8 @@ public class AdministratorController extends App implements Initializable{
         }
 		id.setCellValueFactory(new PropertyValueFactory("userID"));
 		role.setCellValueFactory(new PropertyValueFactory("userRole"));
-		lastName.setCellValueFactory(new PropertyValueFactory("lName"));
-		firstName.setCellValueFactory(new PropertyValueFactory("fName"));
+		last.setCellValueFactory(new PropertyValueFactory("lName"));
+		first.setCellValueFactory(new PropertyValueFactory("fName"));
 		id.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,Integer>>(){
 			@Override
 			public void handle(CellEditEvent<Staff_Model, Integer> e) {
@@ -132,7 +132,7 @@ public class AdministratorController extends App implements Initializable{
 				System.out.println("ROLE CHANGE");
 			}
 		});
-		lastName.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,String>>(){
+		last.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,String>>(){
 			@Override
 			public void handle(CellEditEvent<Staff_Model, String> e) {
 				((Staff_Model) e.getTableView().getItems().get(
@@ -145,7 +145,7 @@ public class AdministratorController extends App implements Initializable{
 				
 			}
 		});
-		firstName.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,String>>(){
+		first.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,String>>(){
 			@Override
 			public void handle(CellEditEvent<Staff_Model, String> e) {
 				((Staff_Model) e.getTableView().getItems().get(
@@ -324,7 +324,7 @@ public class AdministratorController extends App implements Initializable{
 	 * @return The new scene created for eaasy access.
 	 * @throws IOException
 	 */
-	public Scene displayPage() throws IOException {
+	private Scene displayPage() throws IOException {
 		//Load the FXML file
 		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("Admin_Home.fxml"));
 		loader.setController(this);
@@ -354,8 +354,8 @@ public class AdministratorController extends App implements Initializable{
 	
 	@FXML private void addStaff() throws SQLException{
 		table.setEditable(true);
-	    lastName.setCellFactory(TextFieldTableCell.forTableColumn());
-	    firstName.setCellFactory(TextFieldTableCell.forTableColumn());
+	    last.setCellFactory(TextFieldTableCell.forTableColumn());
+	    first.setCellFactory(TextFieldTableCell.forTableColumn());
 	    role.setCellFactory(TextFieldTableCell.<Staff_Model,Integer>forTableColumn(new IntegerStringConverter()));
 	    addRemoveColumn.setCellFactory(new Callback<TableColumn<Staff_Model,String>, TableCell<Staff_Model,String>>() {         
 	        @Override
@@ -371,8 +371,8 @@ public class AdministratorController extends App implements Initializable{
 	
 	@FXML private void removeStaff() throws SQLException{
 		table.setEditable(false);
-	    lastName.setCellFactory(cellFactory);
-	    firstName.setCellFactory(cellFactory);
+	    last.setCellFactory(cellFactory);
+	    first.setCellFactory(cellFactory);
 	    role.setCellFactory(cellIntFactory);///////
 		table.setItems(tableContents);
 		hintLabel.setText("Please Select the User to Remove, then Press 'Remove'");

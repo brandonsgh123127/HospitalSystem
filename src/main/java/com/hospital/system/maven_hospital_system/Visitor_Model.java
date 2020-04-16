@@ -19,13 +19,18 @@ public class Visitor_Model{
 		private SimpleStringProperty address;
 		private SimpleStringProperty city;
 		private SimpleStringProperty state;
+		private SimpleStringProperty zip;
+		private SimpleStringProperty email;
+		private SimpleStringProperty phone;
 		private SimpleStringProperty country;
 		private SimpleBooleanProperty isResident;
 		private SimpleStringProperty insuranceID;
 		private SimpleStringProperty insuranceProvider;
 		
-		
-		public Visitor_Model(Integer id, String fName, String lName, String DOB,String address, String city, String state, String country, Boolean isResident, String insuranceID,String insuranceProvider) {
+		/*
+		 * Model to Create New Visitor
+		 */
+		public Visitor_Model(Integer id, String fName, String lName, String DOB,String address, String city, String state, String zip, String email, String phone,String country, Boolean isResident, String insuranceID,String insuranceProvider) {
 			this.userID=new SimpleIntegerProperty(id);
 			this.fName=new SimpleStringProperty(fName);
 			this.lName = new SimpleStringProperty(lName);
@@ -33,6 +38,9 @@ public class Visitor_Model{
 			this.address=new SimpleStringProperty(address);
 			this.city = new SimpleStringProperty(city);
 			this.state = new SimpleStringProperty(state);
+			this.zip = new SimpleStringProperty(zip);
+			this.email=new SimpleStringProperty(email);
+			this.phone = new SimpleStringProperty(phone);
 			this.country=new SimpleStringProperty(country);
 			this.isResident=new SimpleBooleanProperty(isResident);
 			this.insuranceID=new SimpleStringProperty(insuranceID);
@@ -77,6 +85,24 @@ public class Visitor_Model{
 		public void setState(String state) {
 			this.state = new SimpleStringProperty(state);
 		}
+		public String getZip() {
+			return zip.get();
+		}
+		public void setZip(String zip) {
+			this.zip= new SimpleStringProperty(zip);
+		}
+		public String getPhone() {
+			return phone.get();
+		}
+		public void setPhone(String phone) {
+			this.phone = new SimpleStringProperty(phone);
+		}
+		public String getEmail() {
+			return email.get();
+		}
+		public void setEmail(String email) {
+			this.email = new SimpleStringProperty(email);
+		}		
 		public String getCountry() {
 			return country.get();
 		}
@@ -94,6 +120,12 @@ public class Visitor_Model{
 		}
 		public void setInsuranceID(String insuranceID) {
 			this.insuranceID=new SimpleStringProperty(insuranceID);
+		}
+		public String getDOB() {
+			return DOB.get();
+		}
+		public void setDOB(String DOB) {
+			this.DOB=new SimpleStringProperty(DOB);
 		}
 		public String getInsuranceProvider() {
 			return insuranceProvider.get();
