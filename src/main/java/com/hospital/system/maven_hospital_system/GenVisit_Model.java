@@ -8,6 +8,7 @@ public class GenVisit_Model {
 	private SimpleStringProperty DOB;
 	private SimpleIntegerProperty doctor;
 	private SimpleStringProperty diagnosis;
+	private SimpleStringProperty room,gender;
 	
 	/*
 	 * Visits Table For Patient Information View

@@ -86,7 +86,7 @@ public class PatientVisit_Controller implements Initializable {
 			stmt = con.createStatement();
 		ResultSet rs=stmt.executeQuery("        SELECT p1.VisitID, p1.patientID, p1.PhysicianID, p1.Results, p2.lName,p2.fName,p2.DateOfBirth" + 
 				"       FROM visits AS p1 INNER JOIN patients AS p2 " + 
-				"         ON p1.PatientID=" + userID + " AND p2.patientID=" + userID); 
+				"         ON p1.PatientID=" + userID + " AND p2.patientID=" + userID +" AND p1.VisitID=" +visitID); 
 		genTableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
 			genTableContents.add(new GenVisit_Model(rs.getString(5) + ","+rs.getString(6),rs.getString(7),rs.getString(4),rs.getInt(2)));
@@ -161,9 +161,5 @@ public class PatientVisit_Controller implements Initializable {
 			prescriptions.refresh();
 
 	}
-	private static final LocalDate LOCAL_DATE (String dateString){
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	    LocalDate localDate = LocalDate.parse(dateString, formatter);
-	    return localDate;
-	}
+
 }

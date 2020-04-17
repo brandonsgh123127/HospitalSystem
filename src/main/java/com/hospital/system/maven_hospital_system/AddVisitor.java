@@ -28,6 +28,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -35,9 +36,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class AddVisitor implements Initializable{
-	
+	private Callback<TableColumn<Visit_Model, Button>, TableCell<Visit_Model, Button>> cellFactory;
+
 	private  Visitor_Model temp;
 	private Integer userID=-1;
 	
@@ -56,7 +59,9 @@ public class AddVisitor implements Initializable{
 	@FXML
 	TableView<Visit_Model> table;
 	@FXML
-	TableColumn<Visit_Model,String> dateColumn,reasonColumn,doctorColumn,moreColumn;
+	TableColumn<Visit_Model,String> dateColumn,reasonColumn,doctorColumn;
+	@FXML
+	TableColumn<Visit_Model,Button>moreColumn;
 	@FXML
 	private ObservableList<Visit_Model> tableContents;
 
@@ -89,6 +94,7 @@ public class AddVisitor implements Initializable{
 		dateColumn.setCellValueFactory(new PropertyValueFactory("date"));
 		reasonColumn.setCellValueFactory(new PropertyValueFactory("reason"));
 		doctorColumn.setCellValueFactory(new PropertyValueFactory("doctor"));
+		
 		table.setOnMousePressed(new EventHandler<MouseEvent>() {
 		    @Override 
 		    public void handle(MouseEvent event) {  //double click on user to change info...
@@ -138,6 +144,14 @@ public class AddVisitor implements Initializable{
 		            	}
 		            }
 		         });
+				
+				cellFactory = new Callback<TableColumn<Visit_Model,Button>, TableCell<Visit_Model,Button>>() {
+	                public TableCell call(TableColumn p) {
+	                    return new AddVisitCell();
+	                }
+				};
+				moreColumn.setCellFactory(cellFactory);
+
 				
 	}
 	public Stage getDisplay() {return dialog;}
