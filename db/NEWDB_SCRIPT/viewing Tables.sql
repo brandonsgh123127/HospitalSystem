@@ -14,7 +14,7 @@ SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg,p3.TestType
        FROM visits AS p1 INNER JOIN patients AS p2 
          ON p1.patientID= 4043 AND p2.patientID=4043 ;
 select * from prescriptiontypes;
-select * from visits;
+select * from roles;
 select * from Patients;
 INSERT INTO patients VALUES(4043,'Smith','John','2 Apple Hill','Cupertino','CA','99999','3109019902','smith@applehill.com','2020-04-08','United States',1,'192-29439','aet');
 select * from roles;

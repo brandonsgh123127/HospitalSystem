@@ -92,7 +92,6 @@ public class PatientVisit_Controller implements Initializable {
 			genTableContents.add(new GenVisit_Model(rs.getString(5) + ","+rs.getString(6),rs.getString(7),rs.getString(4),rs.getInt(2)));
 		}
 		 genTable.setItems(genTableContents);
-
 		}
 		catch(Exception e) {
 			System.err.println("Failed to retrieve patient visit general info!");
