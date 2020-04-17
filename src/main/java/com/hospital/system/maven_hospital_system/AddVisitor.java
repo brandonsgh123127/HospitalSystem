@@ -36,6 +36,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 public class AddVisitor implements Initializable{
@@ -101,6 +102,17 @@ public class AddVisitor implements Initializable{
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {    //TABLE VIEWS!!
 		        	System.out.println(((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 		        	PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID,((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
+		        	visits.getDisplay().setOnHidden(new EventHandler<WindowEvent>() {
+	        			@Override
+	        			public void handle(WindowEvent event) {
+	        				try {
+	        					System.out.println("Close Window");
+	        					updateTable();
+	        				} catch (SQLException e) {
+	        					// TODO Auto-generated catch block
+	        					e.printStackTrace();
+	        				}	
+	        			}});     
 		        }
 		    }
 		});
@@ -281,7 +293,7 @@ public class AddVisitor implements Initializable{
 			ResultSet rs=stmt.executeQuery("SELECT * FROM visits WHERE PatientID = "+ userID); 
 			while(rs.next()) {
 				System.out.println("Prior visits.");
-				tableContents.add(new Visit_Model(rs.getString(2),rs.getString(3),rs.getInt(5),rs.getString(7),rs.getInt(1)));
+				tableContents.add(new Visit_Model(rs.getString(2),rs.getString(3),rs.getInt(5),rs.getString(7),rs.getInt(1),userID,rs.getInt(6),con));
 			}
 			}
 			catch(NullPointerException e) {

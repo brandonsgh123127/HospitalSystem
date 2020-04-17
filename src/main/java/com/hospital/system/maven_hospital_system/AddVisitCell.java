@@ -2,6 +2,7 @@ package com.hospital.system.maven_hospital_system;
 
 import java.sql.SQLException;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -12,6 +13,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 /**
@@ -30,8 +32,25 @@ public AddVisitCell() {
     this.setGraphic(button);
     EventHandler<ActionEvent> add = new EventHandler<ActionEvent>() { 
         public void handle(ActionEvent e) {
-        	System.out.println("Button Pressed");
-        }
+        	ObservableList<Visit_Model> tableContents;	
+        	PatientVisit_Controller visit;
+            TableRow row = getTableRow();
+            TableColumn col = getTableColumn();            
+            tableContents = getTableView().getItems();
+            int lastIndex = 0;
+            //System.out.println("Button Pressed + "+ ((Visit_Model)row.getItem()).getPatientID());
+            if(row.getItem()==null) {
+                for(int i = 0; i < tableContents.size()-1;i++) {
+                	if(((Visit_Model)tableContents.get(i+1))==null) {
+                		break;
+                	}
+                	else {
+                		lastIndex++;
+                	}
+                }
+            	//PatientVisit_Controller visit= new PatientVisit_Controller(((Visit_Model)view).getPatientID(),((Visit_Model) view).getVisitID(),((Visit_Model) view).getConnection());
+            }
+            	visit = new PatientVisit_Controller(tableContents.get(lastIndex).getPatientID(),tableContents.get(lastIndex).getFollowUpID(),tableContents.get(lastIndex).getConnection());            }
         };
     button.setOnAction(add);
 }

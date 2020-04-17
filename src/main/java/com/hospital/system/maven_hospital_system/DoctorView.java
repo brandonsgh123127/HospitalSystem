@@ -89,7 +89,6 @@ public class DoctorView implements Initializable {
 		        }
 		    }
 		});
-
 		
 		
 

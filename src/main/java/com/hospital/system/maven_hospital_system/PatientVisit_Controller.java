@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -27,14 +28,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.converter.IntegerStringConverter;
 
 public class PatientVisit_Controller implements Initializable {
 
 	private Stage stage,visitStage;
 	private Connection con;
+	private boolean isNew;
 	private Integer userID;
-	private Integer visitID;
+	private Integer visitID,followUpID;
 	@FXML
 	private TableView<GenVisit_Model> genTable;
 	@FXML
@@ -46,7 +49,7 @@ public class PatientVisit_Controller implements Initializable {
 	@FXML
 	private TableColumn<Test_Model,String> test,status,result,view;
 	@FXML
-	private Button visitHistory;
+	private Button visitHistory,save;
 	@FXML
 	private TextArea symptoms,notes;
 	@FXML
@@ -59,15 +62,27 @@ public class PatientVisit_Controller implements Initializable {
 	private ObservableList<Test_Model> testTableContents;	
 	private ObservableList<Prescription_Model> prescriptionTableContents;	
 
-
+//Existing Visit
 	public PatientVisit_Controller(Stage stage, Connection con, Integer userID,Integer visitID) {
 		this.stage = stage;
 		this.con=con;
+		isNew=false;
 		this.userID=userID;
 		this.visitID = visitID;
 		System.out.println(userID);
 		this.visitStage=display();
 	}
+	
+	public PatientVisit_Controller(Integer userID, Integer visitID,Connection con) {
+		this.stage = new Stage();
+		this.userID=userID;
+		isNew = true;
+		this.visitID = visitID;
+		this.con=con;
+		System.out.println(userID);
+		this.visitStage=display();
+	}
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -75,7 +90,8 @@ public class PatientVisit_Controller implements Initializable {
 		DOB.setCellValueFactory(new PropertyValueFactory("DOB"));
 		diagnosis.setCellValueFactory(new PropertyValueFactory("diagnosis"));
 		doctor.setCellValueFactory(new PropertyValueFactory("doctor"));
-
+		if(isNew)
+			save.setVisible(true);
 		test.setCellValueFactory(new PropertyValueFactory("test"));
 		status.setCellValueFactory(new PropertyValueFactory("status"));
 		result.setCellValueFactory(new PropertyValueFactory("result"));
@@ -90,6 +106,49 @@ public class PatientVisit_Controller implements Initializable {
 		//Allows values to be edited by nurse
 		genTable.setEditable(true);
 	    doctor.setCellFactory(TextFieldTableCell.<GenVisit_Model,Integer>forTableColumn(new IntegerStringConverter()));
+	    //if new instance, able to modify visit row
+	    if(isNew) {
+	    	save.setVisible(true);
+	    	Statement stmt;
+			try {
+				stmt = con.createStatement();
+		    	ResultSet rs = stmt.executeQuery("SELECT * FROM Visits  WHERE patientID ="+userID+ " ORDER BY Date DESC LIMIT 1");
+		    	while(rs.next())
+		    	{
+		    		followUpID=rs.getInt(6);
+			    			PreparedStatement stmt2=con.prepareStatement("INSERT INTO 'Visits' VALUES("+followUpID+",'-"+"', '-'"+","+userID+",-1"+",-1,'-'");
+			    			stmt2.execute();
+
+		    	}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	    	
+	    }
+	    visitStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent event) {
+				System.out.println("Update table sec");	
+				visitStage.hide();
+				visitStage.close();
+			}});
+	    
+	    //When save button is pressed, save data to new entry
+	    save.setOnAction(event -> {
+	    	Visit_Model temp = new Visit_Model("yyyy-MM-DD", "-", -1,"-", visitID,userID,followUpID,con);
+	    	Statement stmt;
+			try {
+				stmt = con.createStatement();
+				PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+temp.getVisitID()+",'"+temp.getDate() +"', '"+ temp.getReason()+"' , "+userID+
+						","+temp.getDoctor()+","+ genFollowUp() + ",'" +temp.getDiagnosis()+"'");
+				stmt2.execute();
+
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}	    
+	    });
 
 	    
 	  //When enter key is pressed
@@ -134,7 +193,10 @@ public class PatientVisit_Controller implements Initializable {
 			System.err.println("Failed to retrieve patient visit general info!");
 			e.printStackTrace();
 		}
-		
+
+	}
+	public Stage getDisplay() {
+		return visitStage;
 	}
 	public Stage display() {
 		visitStage = new Stage();
@@ -201,5 +263,22 @@ public class PatientVisit_Controller implements Initializable {
 	public int getVisitID() {
 		return visitID;
 	}
+	
+	public int genFollowUp() {
+		Random ran = new Random();
+		int newID = ran.nextInt((int) Math.pow(2,12));
+		try {
+		Statement stmt=con.createStatement();
+		ResultSet rs=stmt.executeQuery("SELECT * FROM Visits WHERE visitID=" + newID); 
+		if(rs.next())
+			return genFollowUp();
+		else
+			return (newID);
+		}
+		catch(SQLException e) {
+			System.err.println("Exception in handling new follow up id generation!");
+		}
+		return -1;
+		}
 
 }
