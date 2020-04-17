@@ -16,7 +16,10 @@ SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg,p3.TestType
 select * from prescriptiontypes;
 select * from roles;
 select * from Patients;
-select * from users WHERE RoleID=1;
+INSERT INTO patients VALUES(4043,'Smith','John','2 Apple Hill','Cupertino','CA','99999','3109019902','smith@applehill.com','2020-04-08','United States',1,'192-29439','aet');
+select * from roles;
+INSERT INTO roles VALUES(0,'Staff'),(2,'Doctor'),(3,'Nurse'),(4,'Patient');
 SELECT p1.PrescriptionID, p1.VisitID, p1.PrescriptionTypeID, p1.Dosage, p1.Instructions, p3.PrescriptionType,p2.Date
 FROM prescriptions AS p1 INNER JOIN visits AS p2 INNER JOIN prescriptiontypes as p3
-ON p1.VisitID= p2.visitID   and p1.PrescriptionTypeID = p3.PrescriptionTypeID
+ON p1.VisitID= p2.visitID   and p1.PrescriptionTypeID = p3.PrescriptionTypeID;
+INSERT INTO prescriptiontypes VALUES(1,'Depressant'),(2,'Stimulant'),(3,'Opiod');
