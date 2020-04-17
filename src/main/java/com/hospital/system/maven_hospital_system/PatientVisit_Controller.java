@@ -2,6 +2,7 @@ package com.hospital.system.maven_hospital_system;
 
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,6 +12,7 @@ import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,9 +22,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.converter.IntegerStringConverter;
 
 public class PatientVisit_Controller implements Initializable {
 
@@ -33,7 +38,9 @@ public class PatientVisit_Controller implements Initializable {
 	@FXML
 	private TableView<GenVisit_Model> genTable;
 	@FXML
-	private TableColumn<GenVisit_Model,String> name,gender,DOB, diagnosis,doctor;	
+	private TableColumn<GenVisit_Model,String> name,gender,DOB, diagnosis;
+	@FXML
+	private TableColumn<GenVisit_Model,Integer> doctor;	
 	@FXML
 	private TableView<Test_Model> tests;
 	@FXML
@@ -80,6 +87,36 @@ public class PatientVisit_Controller implements Initializable {
 		dateGiven.setCellValueFactory(new PropertyValueFactory("dateGiven"));
 		statusTest.setCellValueFactory(new PropertyValueFactory("status"));
 
+		//Allows values to be edited by nurse
+		genTable.setEditable(true);
+	    doctor.setCellFactory(TextFieldTableCell.<GenVisit_Model,Integer>forTableColumn(new IntegerStringConverter()));
+
+	    
+	  //When enter key is pressed
+	  		doctor.setOnEditCommit(new EventHandler<CellEditEvent<GenVisit_Model,Integer>>(){
+	  			@Override
+	  			public void handle(CellEditEvent<GenVisit_Model, Integer> e) {
+	  				try {
+	  					((GenVisit_Model) e.getTableView().getItems().get(
+	  					            e.getTablePosition().getRow())
+	  					            ).setDoctor(e.getNewValue());
+	  					PreparedStatement stmt=con.prepareStatement("UPDATE `Visits` SET PhysicianID = " + ((GenVisit_Model) e.getTableView().getItems().get(
+  					            e.getTablePosition().getRow())
+  					            ).getDoctor() + " WHERE PatientID = " + ((GenVisit_Model) e.getTableView().getItems().get(
+  		  					            e.getTablePosition().getRow())
+  		  					            ).getPatientID() + " AND visitID = " + ((GenVisit_Model) e.getTableView().getItems().get(
+  		  	  					            e.getTablePosition().getRow())
+  		  	  					            ).getVisitID());
+	  					stmt.execute();
+	  				} catch (Exception e1) {
+	  					// TODO Auto-generated catch block
+	  					e1.printStackTrace();
+	  				}
+	  				System.out.println("Doctor CHANGE");
+	  				
+	  			}
+	  		});
+	    
 		//Initialize Static Information--> Patient Visit Table
 		Statement stmt;
 		try {
@@ -89,7 +126,7 @@ public class PatientVisit_Controller implements Initializable {
 				"         ON p1.PatientID=" + userID + " AND p2.patientID=" + userID +" AND p1.VisitID=" +visitID); 
 		genTableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-			genTableContents.add(new GenVisit_Model(rs.getString(5) + ","+rs.getString(6),rs.getString(7),rs.getString(4),rs.getInt(2)));
+			genTableContents.add(new GenVisit_Model(rs.getString(5) + ","+rs.getString(6),rs.getString(7),rs.getString(4),rs.getInt(3),rs.getInt(1),rs.getInt(2)));
 		}
 		 genTable.setItems(genTableContents);
 		}
@@ -160,6 +197,9 @@ public class PatientVisit_Controller implements Initializable {
 			prescriptions.setItems(prescriptionTableContents);
 			prescriptions.refresh();
 
+	}
+	public int getVisitID() {
+		return visitID;
 	}
 
 }

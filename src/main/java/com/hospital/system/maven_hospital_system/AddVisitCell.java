@@ -1,6 +1,10 @@
 package com.hospital.system.maven_hospital_system;
 
+import java.sql.SQLException;
+
+import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.PasswordField;
@@ -24,7 +28,15 @@ public AddVisitCell() {
     button.setText("Add Visit");
     this.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
     this.setGraphic(button);
+    EventHandler<ActionEvent> add = new EventHandler<ActionEvent>() { 
+        public void handle(ActionEvent e) {
+        	System.out.println("Button Pressed");
+        }
+        };
+    button.setOnAction(add);
 }
-	protected void createButton() {
-		button = new Button();    
-	}}
+
+private void createButton() {
+	button = new Button();
+}
+}

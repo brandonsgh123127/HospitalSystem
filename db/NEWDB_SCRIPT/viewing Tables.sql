@@ -10,15 +10,17 @@ SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg,p3.TestType
          ON p1.VisitID= 1 AND p2.VisitID=1 and
          p1.testTypeID = p3.TestTypeID;
          /*genTable*/
-        SELECT p1.VisitID, p1.patientID, p1.PhysicianID, p1.Results, p2.lName,p2.fName
+        SELECT  p1.VisitID, p1.patientID, p1.PhysicianID, p1.Results, p2.lName,p2.fName,p2.DateOfBirth
        FROM visits AS p1 INNER JOIN patients AS p2 
-         ON p1.patientID= 4043 AND p2.patientID=4043 ;
+         ON p1.patientID= 4043 AND p2.patientID=4043 AND p1.visitID = 1;
 select * from prescriptiontypes;
 select * from visits;
 select * from Patients;
 select * from users WHERE RoleID=1;
+INSERT INTO visits VALUES(3,'04-25-2021','Physical',4043,-1,4,'-');
 SELECT p1.PrescriptionID, p1.VisitID, p1.PrescriptionTypeID, p1.Dosage, p1.Instructions, p3.PrescriptionType,p2.Date
 FROM prescriptions AS p1 INNER JOIN visits AS p2 INNER JOIN prescriptiontypes as p3
 ON p1.VisitID= p2.visitID   and p1.PrescriptionTypeID = p3.PrescriptionTypeID;
-SELECT p1.VisitID, p1.followUpID,p1.Date,p1.patientID, p1.PhysicianID,p2.lName,p2.fName,p2.DateOfBirth FROM visits AS p1 INNER JOIN patients AS p2 ON p1.PhysicianID=2808 and p1.patientID=p2.patientID;
+SELECT p1.VisitID, p1.followUpID,p1.Date,p1.patientID, p1.PhysicianID,p2.lName,p2.fName,p2.DateOfBirth FROM visits AS p1 INNER JOIN patients AS p2
+ ON p1.PhysicianID=2808 and p1.patientID=p2.patientID;
 

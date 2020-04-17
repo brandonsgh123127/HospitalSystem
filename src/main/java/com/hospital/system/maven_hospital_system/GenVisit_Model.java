@@ -6,18 +6,21 @@ import javafx.beans.property.SimpleStringProperty;
 public class GenVisit_Model {
 	private SimpleStringProperty name;
 	private SimpleStringProperty DOB;
-	private SimpleIntegerProperty doctor;
+	private SimpleIntegerProperty doctor,visitID,patientID;
 	private SimpleStringProperty diagnosis;
 	private SimpleStringProperty room,gender;
 	
 	/*
 	 * Visits Table For Patient Information View
 	 */
-	public GenVisit_Model(String name, String DOB,String diagnosis,Integer doctor) {
+	public GenVisit_Model(String name, String DOB,String diagnosis,Integer doctor,Integer visitID,Integer patientID) {
 		this.name = new SimpleStringProperty(name);
 		this.DOB = new SimpleStringProperty(DOB);
 		this.doctor= new SimpleIntegerProperty(doctor);
 		this.diagnosis= new SimpleStringProperty(diagnosis);
+		this.visitID = new SimpleIntegerProperty(visitID);
+		this.patientID= new SimpleIntegerProperty(patientID);
+
 	}
 	
 	public String getName() {
@@ -43,5 +46,17 @@ public class GenVisit_Model {
 	}
 	public void setDiagnosis(String diagnosis) {
 		this.diagnosis= new SimpleStringProperty(diagnosis);
+	}
+	public Integer getVisitID() {
+		return visitID.get();
+	}
+	public void setVisitID(Integer visitID) {
+		this.visitID= new SimpleIntegerProperty(visitID);
+	}
+	public Integer getPatientID() {
+		return patientID.get();
+	}
+	public void setPatientID(Integer patientID) {
+		this.patientID= new SimpleIntegerProperty(patientID);
 	}
 }

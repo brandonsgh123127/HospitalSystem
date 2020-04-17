@@ -99,7 +99,7 @@ public class AddVisitor implements Initializable{
 		    @Override 
 		    public void handle(MouseEvent event) {  //double click on user to change info...
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {    //TABLE VIEWS!!
-		        	System.out.println(userID);
+		        	System.out.println(((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 		        	PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID,((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 		        }
 		    }
@@ -151,8 +151,7 @@ public class AddVisitor implements Initializable{
 	                }
 				};
 				moreColumn.setCellFactory(cellFactory);
-
-				
+								
 	}
 	public Stage getDisplay() {return dialog;}
 	public void display() {

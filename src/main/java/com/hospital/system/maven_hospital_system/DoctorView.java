@@ -48,7 +48,7 @@ public class DoctorView implements Initializable {
 	@FXML
 	private TextField searchBar;
 
-	private Stage docStage,stage;
+	private Stage docStage,stage,visitStage;
 	private Scene scene;
 	private Connection con;
 	private Integer docID,nurseID;
@@ -66,28 +66,29 @@ public class DoctorView implements Initializable {
 		unDOB.setCellValueFactory(new PropertyValueFactory("DOB"));
 		unGender.setCellValueFactory(new PropertyValueFactory("gender"));
 		unRoomNum.setCellValueFactory(new PropertyValueFactory("room"));
-//		
-//		table.setOnMousePressed(new EventHandler<MouseEvent>() {
-//		    @Override 
-//		    public void handle(MouseEvent event) {  //double click on user to change info...
-//		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-//		        	AddVisitor add = new AddVisitor(stage,con,((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getUserID());
-//	            	dialog = add.getDisplay();
-//	            	dialog.setOnHidden( new EventHandler<WindowEvent>() {
-//	        			@Override
-//	        			public void handle(WindowEvent event) {
-//	        				try {
-//	        					System.out.println("Update table sec");
-//	        					updateDataTable();
-//	        				} catch (SQLException e) {
-//	        					// TODO Auto-generated catch block
-//	        					e.printStackTrace();
-//	        				}	
-//	        			}});           		
-//
-//		        }
-//		    }
-//		});
+		
+		table.setOnMousePressed(new EventHandler<MouseEvent>() {
+		    @Override 
+		    public void handle(MouseEvent event) {  //double click on user to change info...
+		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID() +"PID");
+		        	PatientVisit_Controller visit= new PatientVisit_Controller(stage,con,((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID(),((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
+	            	visitStage = visit.display();
+	            	visitStage.setOnHidden( new EventHandler<WindowEvent>() {
+	        			@Override
+	        			public void handle(WindowEvent event) {
+	        				try {
+	        					System.out.println("Update table sec");
+	        					updateTable();
+	        				} catch (SQLException e) {
+	        					// TODO Auto-generated catch block
+	        					e.printStackTrace();
+	        				}	
+	        			}});           		
+
+		        }
+		    }
+		});
 
 		
 		
@@ -135,7 +136,7 @@ public class DoctorView implements Initializable {
 				tableContents=FXCollections.observableArrayList();
 				while(rs.next()) {
 					if(LOCAL_DATE(rs.getString(3)).compareTo(LocalDate.now())>-1)
-						tableContents.add(new GenVisit_Model(rs.getString(5) + ","+rs.getString(6),rs.getString(7),rs.getString(4),rs.getInt(2)));
+						tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(3),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
 				}
 				 table.setItems(tableContents);
 				}
@@ -149,10 +150,10 @@ public class DoctorView implements Initializable {
 					stmt = con.createStatement();
 				ResultSet rs=stmt.executeQuery("        SELECT p1.VisitID, p1.followUpID,p1.Date,p1.patientID, p1.PhysicianID,p2.lName,p2.fName,p2.DateOfBirth" + 
 						"       FROM visits AS p1 INNER JOIN patients AS p2 " + 
-						"         ON p1.PhysicianID='-' AND p1.patientID=p2.patientID"); 
+						"         ON p1.PhysicianID=-1 AND p1.patientID=p2.patientID"); 
 				tableContents=FXCollections.observableArrayList();
 				while(rs.next()) {
-					tableContents.add(new GenVisit_Model(rs.getString(5) + ","+rs.getString(6),rs.getString(7),rs.getString(4),rs.getInt(2)));
+					tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(3),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
 				}
 				 unTable.setItems(tableContents);
 				}
