@@ -2,6 +2,7 @@ package com.hospital.system.maven_hospital_system;
 
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -74,7 +75,7 @@ public class DoctorView implements Initializable {
 		        	if(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0))!=null) {
 		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID() +"PID");
 		        	PatientVisit_Controller visit= new PatientVisit_Controller(stage,con,((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID(),((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
-	            	visitStage = visit.display();
+	            	visitStage = visit.getDisplay();
 	            	visitStage.setOnHidden( new EventHandler<WindowEvent>() {
 	        			@Override
 	        			public void handle(WindowEvent event) {
@@ -96,8 +97,16 @@ public class DoctorView implements Initializable {
 		    @Override 
 		    public void handle(MouseEvent event) {  //double click on user to change info...
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID() +"PID");
+		        	if(((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0))!=null)
 		        	// Add Unassigned patients to Patients
+		        	try {
+						PreparedStatement stmt2=con.prepareStatement("UPDATE Visits SET PhysicianID="+docID+" WHERE PatientID=" + ((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0)).getPatientID()+"");
+						stmt2.execute();
+						updateTable();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 		        }
 		    }
 		});

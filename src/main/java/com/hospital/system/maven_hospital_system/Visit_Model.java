@@ -9,7 +9,7 @@ public class Visit_Model {
 	private SimpleStringProperty date;
 	private SimpleStringProperty reason;
 	private SimpleIntegerProperty doctor;
-	private SimpleStringProperty diagnosis;
+	private SimpleStringProperty diagnosis,notes;
 	private SimpleIntegerProperty visitID,patientID;
 	private Connection con;
 	private SimpleIntegerProperty followUpID;
@@ -17,7 +17,7 @@ public class Visit_Model {
 	/*
 	 * Visits Table For Patient Information View
 	 */
-	public Visit_Model(String date, String reason, Integer doctor,String diagnosis, Integer visitID,Integer patientID,Integer followUpID,Connection con) {
+	public Visit_Model(String date, String reason, Integer doctor,String diagnosis, Integer visitID,Integer patientID,Integer followUpID,Connection con,String notes) {
 		this.date = new SimpleStringProperty(date);
 		this.reason = new SimpleStringProperty(reason);
 		this.doctor= new SimpleIntegerProperty(doctor);
@@ -26,6 +26,7 @@ public class Visit_Model {
 		this.patientID= new SimpleIntegerProperty(patientID);
 		this.con=con;
 		this.followUpID=new SimpleIntegerProperty(followUpID);
+		this.notes= new SimpleStringProperty(notes);
 	}
 	
 	public String getDate() {
@@ -77,5 +78,11 @@ public class Visit_Model {
 	}
 	public void setConnection(Connection con) {
 		this.con= con;
+	}
+	public String getNotes() {
+		return notes.get();
+	}
+	public void setNotes(String notes) {
+		this.notes= new SimpleStringProperty(notes);
 	}
 }

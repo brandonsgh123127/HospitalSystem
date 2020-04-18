@@ -316,7 +316,7 @@ public class AddVisitor implements Initializable{
 			ResultSet rs=stmt.executeQuery("SELECT * FROM visits WHERE PatientID = "+ userID); 
 			while(rs.next()) {
 				System.out.println("Prior visits.");
-				tableContents.add(new Visit_Model(rs.getString(2),rs.getString(3),rs.getInt(5),rs.getString(7),rs.getInt(1),userID,rs.getInt(6),con));
+				tableContents.add(new Visit_Model(rs.getString(2),rs.getString(3),rs.getInt(5),rs.getString(7),rs.getInt(1),userID,rs.getInt(6),con,rs.getString(8)));
 			}
 			}
 			catch(NullPointerException e) {
