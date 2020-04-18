@@ -1,6 +1,7 @@
 package com.hospital.system.maven_hospital_system;
 
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,17 +38,11 @@ public AddVisitCell() {
             TableRow row = getTableRow();
             TableColumn col = getTableColumn();            
             tableContents = getTableView().getItems();
-            int lastIndex = 0;
+            int lastIndex = -1;
             //System.out.println("Button Pressed + "+ ((Visit_Model)row.getItem()).getPatientID());
-            if(row.getItem()==null) {
-                for(int i = 0; i < tableContents.size()-1;i++) {
-                	if(((Visit_Model)tableContents.get(i+1))==null) {
-                		break;
-                	}
-                	else {
-                		lastIndex++;
-                	}
-                }
+                for (Object r : tableContents) {
+                	System.out.print("BREAK");
+                	lastIndex++;
             	//PatientVisit_Controller visit= new PatientVisit_Controller(((Visit_Model)view).getPatientID(),((Visit_Model) view).getVisitID(),((Visit_Model) view).getConnection());
             }
             	visit = new PatientVisit_Controller(tableContents.get(lastIndex).getPatientID(),tableContents.get(lastIndex).getFollowUpID(),tableContents.get(lastIndex).getConnection());            }

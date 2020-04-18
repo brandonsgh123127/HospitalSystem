@@ -115,9 +115,14 @@ public class PatientVisit_Controller implements Initializable {
 		    	ResultSet rs = stmt.executeQuery("SELECT * FROM Visits  WHERE patientID ="+userID+ " ORDER BY Date DESC LIMIT 1");
 		    	while(rs.next())
 		    	{
-		    		followUpID=rs.getInt(6);
-			    			PreparedStatement stmt2=con.prepareStatement("INSERT INTO 'Visits' VALUES("+followUpID+",'-"+"', '-'"+","+userID+",-1"+",-1,'-'");
-			    			stmt2.execute();
+		    		visitID=rs.getInt(6);
+		    		followUpID=genFollowUp();
+			    	Visit_Model temp = new Visit_Model("08-28-2045", "-", -1,"-", visitID,userID,followUpID,con);
+			    	temp.setFollowUpID(followUpID);
+			    	System.out.println("visit ID" + temp.getVisitID());
+					PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+temp.getVisitID()+",'"+temp.getDate() +"', '"+ temp.getReason()+"' , "+userID+
+							","+temp.getDoctor()+","+ temp.getFollowUpID() + ",'" +temp.getDiagnosis()+"')");
+					stmt2.execute();
 
 		    	}
 			} catch (SQLException e1) {
@@ -136,18 +141,31 @@ public class PatientVisit_Controller implements Initializable {
 	    
 	    //When save button is pressed, save data to new entry
 	    save.setOnAction(event -> {
-	    	Visit_Model temp = new Visit_Model("yyyy-MM-DD", "-", -1,"-", visitID,userID,followUpID,con);
+	    	Visit_Model temp = new Visit_Model("08-28-2045", "-", -1,"-", visitID,userID,followUpID,con);
 	    	Statement stmt;
+	    	//followUpID = genFollowUp();
 			try {
 				stmt = con.createStatement();
+//				temp.setVisitID(temp.getFollowUpID());
+//				temp.setFollowUpID(genFollowUp());
+//				followUpID=temp.getFollowUpID();
 				PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+temp.getVisitID()+",'"+temp.getDate() +"', '"+ temp.getReason()+"' , "+userID+
-						","+temp.getDoctor()+","+ genFollowUp() + ",'" +temp.getDiagnosis()+"'");
+						","+temp.getDoctor()+","+ temp.getFollowUpID() + ",'" +temp.getDiagnosis()+"')");
 				stmt2.execute();
 
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				try {
+					PreparedStatement stmt2=con.prepareStatement("UPDATE Visits SET FollowUpID="+temp.getFollowUpID()+",Date='"+temp.getDate() +"', Reason='"+ temp.getReason()+"' , PatientID="+userID+
+							",PhysicianID="+temp.getDoctor()+",followUpID="+ genFollowUp() + ",Results='" +temp.getDiagnosis()+"' WHERE patientID =" + userID);
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					
+					System.out.println("Exception in relation to adding/modifying visit values.  Please Check Values entered in tables!");
+					e2.printStackTrace();
+				}
 			}	    
+			visitStage.hide();
+			visitStage.close();
 	    });
 
 	    

@@ -60,7 +60,7 @@ public class Visit_Model {
 		this.visitID= new SimpleIntegerProperty(visitID);
 	}
 	public Integer getFollowUpID() {
-		return visitID.get();
+		return followUpID.get();
 	}
 	public void setFollowUpID(Integer followUpID) {
 		this.followUpID= new SimpleIntegerProperty(followUpID);

@@ -71,6 +71,7 @@ public class DoctorView implements Initializable {
 		    @Override 
 		    public void handle(MouseEvent event) {  //double click on user to change info...
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+		        	if(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0))!=null) {
 		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID() +"PID");
 		        	PatientVisit_Controller visit= new PatientVisit_Controller(stage,con,((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID(),((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 	            	visitStage = visit.display();
@@ -85,12 +86,21 @@ public class DoctorView implements Initializable {
 	        					e.printStackTrace();
 	        				}	
 	        			}});           		
+		        	}
 
 		        }
 		    }
 		});
 		
-		
+		unTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+		    @Override 
+		    public void handle(MouseEvent event) {  //double click on user to change info...
+		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID() +"PID");
+		        	// Add Unassigned patients to Patients
+		        }
+		    }
+		});
 
 	}
 	public DoctorView(Stage stage, Scene scene, Connection con, Integer docID, Integer nurseID) {

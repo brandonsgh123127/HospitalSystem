@@ -30,6 +30,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -97,11 +98,13 @@ public class AddVisitor implements Initializable{
 		doctorColumn.setCellValueFactory(new PropertyValueFactory("doctor"));
 		
 		table.setOnMousePressed(new EventHandler<MouseEvent>() {
+			
 		    @Override 
 		    public void handle(MouseEvent event) {  //double click on user to change info...
-		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {    //TABLE VIEWS!!
-		        	System.out.println(((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
-		        	PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID,((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
+		    	
+		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {    //TABLE VIEWS! !
+		        	if(((Visit_Model)table.getSelectionModel().getSelectedItems().get(0))!= null)
+		        	{	PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID,((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 		        	visits.getDisplay().setOnHidden(new EventHandler<WindowEvent>() {
 	        			@Override
 	        			public void handle(WindowEvent event) {
@@ -113,9 +116,29 @@ public class AddVisitor implements Initializable{
 	        					e.printStackTrace();
 	        				}	
 	        			}});     
-		        }
+		        	}	
+		        	else {
+		        		try {
+		    			Statement stmt=con.createStatement();
+		    			ResultSet rs=stmt.executeQuery("SELECT * FROM Patients WHERE patientID=" + userID); 
+		    			if(rs.next()) {
+		    				Integer firstVis = genFollowUp();
+		        		PatientVisit_Controller visit = new PatientVisit_Controller(origStage,con,userID,firstVis);
+		        		System.out.println("INSERT INTO Visits VALUES("+firstVis+","+"'10-10-2045' , '-' , "+userID+","+"-1" +", "+ genFollowUp()+ ", '-' )");
+						PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+firstVis+","+"'10-10-2045'" +", "+"'-'," + userID+","+"-1" +", "+ genFollowUp()+ ", '-' )");
+						stmt2.execute();
+		    			}
+		    			updateTable();
+		        		}
+		    			catch(Exception e) {
+		    				System.err.println("An error occurred when creating a visit on empty table on new patient!!");
+		    				e.printStackTrace();
+		    			}
+		        		}
+		        	}
+		        	}
 		    }
-		});
+		);
 				submitButton.setOnAction(
 		        new EventHandler<ActionEvent>() {
 		            @Override
@@ -309,5 +332,23 @@ public class AddVisitor implements Initializable{
 		    LocalDate localDate = LocalDate.parse(dateString, formatter);
 		    return localDate;
 		}
+
+		public int genFollowUp() {
+			Random ran = new Random();
+			int newID = ran.nextInt((int) Math.pow(2,12));
+			try {
+			Statement stmt=con.createStatement();
+			ResultSet rs=stmt.executeQuery("SELECT * FROM Visits WHERE visitID=" + newID); 
+			if(rs.next())
+				return genFollowUp();
+			else
+				return (newID);
+			}
+			catch(SQLException e) {
+				System.err.println("Exception in handling new follow up id generation!");
+			}
+			return -1;
+			}
+
 
 }
