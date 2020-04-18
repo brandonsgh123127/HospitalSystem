@@ -71,6 +71,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Visits` (
   `PhysicianID` INT NULL,
   `followUpID` INT NULL,
   `Results` VARCHAR(100) null,
+   `Notes` VARCHAR(100) null,
+
   PRIMARY KEY (`VisitID`))
 ENGINE = InnoDB;
 
@@ -165,5 +167,4 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 show tables from mydb;
 use mydb;
 -- Insert Default Users, 1234 admin, 3270 root
-INSERT INTO `users` VALUES (1234,0,'Andrew','Jung','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',1),(3270,0,'John','Smith','4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2',0);
-Insert into visits Values(2,'04-20-2020','-',4043,2808,3,'-');
+Insert into visits Values(2,'04-20-2020','-',4043,2808,3,'-','-');

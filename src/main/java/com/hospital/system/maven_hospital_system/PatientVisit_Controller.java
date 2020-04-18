@@ -26,6 +26,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -117,7 +119,7 @@ public class PatientVisit_Controller implements Initializable {
 		    	{
 		    		visitID=rs.getInt(6);
 		    		followUpID=genFollowUp();
-			    	Visit_Model temp = new Visit_Model("08-28-2045", "-", -1,"-", visitID,userID,followUpID,con);
+			    	Visit_Model temp = new Visit_Model("08-28-2045", "-", -1,"-", visitID,userID,followUpID,con,"");
 			    	temp.setFollowUpID(followUpID);
 			    	System.out.println("visit ID" + temp.getVisitID());
 					PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+temp.getVisitID()+",'"+temp.getDate() +"', '"+ temp.getReason()+"' , "+userID+
@@ -141,7 +143,7 @@ public class PatientVisit_Controller implements Initializable {
 	    
 	    //When save button is pressed, save data to new entry
 	    save.setOnAction(event -> {
-	    	Visit_Model temp = new Visit_Model("08-28-2045", "-", -1,"-", visitID,userID,followUpID,con);
+	    	Visit_Model temp = new Visit_Model("08-28-2045", "-", -1,"-", visitID,userID,followUpID,con,"");
 	    	Statement stmt;
 	    	//followUpID = genFollowUp();
 			try {
@@ -150,7 +152,7 @@ public class PatientVisit_Controller implements Initializable {
 //				temp.setFollowUpID(genFollowUp());
 //				followUpID=temp.getFollowUpID();
 				PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+temp.getVisitID()+",'"+temp.getDate() +"', '"+ temp.getReason()+"' , "+userID+
-						","+temp.getDoctor()+","+ temp.getFollowUpID() + ",'" +temp.getDiagnosis()+"')");
+						","+temp.getDoctor()+","+ temp.getFollowUpID() + ",'" +temp.getDiagnosis()+"', '" +temp.getNotes()+"')");
 				stmt2.execute();
 
 			} catch (SQLException e1) {
@@ -193,6 +195,44 @@ public class PatientVisit_Controller implements Initializable {
 	  				
 	  			}
 	  		});
+	  		//When Nurse Or Doctor Press Enter on Symptoms, update Value
+	  		symptoms.setOnKeyPressed(new EventHandler<KeyEvent>()
+			{
+	  			@Override
+				public void handle(KeyEvent key) {
+					if(key.getCode()==KeyCode.ENTER) {
+	  					try {
+	  						System.out.println("Enter Key");
+							PreparedStatement stmt=con.prepareStatement("UPDATE `Visits` SET Reason = '" + symptoms.getText()+"' WHERE VisitID = " + visitID);
+							stmt.execute();
+							updateTables();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							updateTables();
+						}
+
+					}
+				}
+			});
+	  		//When Nurse Or Doctor Press Enter on Symptoms, update Value
+	  		notes.setOnKeyPressed(new EventHandler<KeyEvent>()
+			{
+	  			@Override
+				public void handle(KeyEvent key) {
+					if(key.getCode()==KeyCode.ENTER) {
+	  					try {
+	  						System.out.println("Enter Key");
+	  						PreparedStatement stmt=con.prepareStatement("UPDATE `Visits` SET notes = '" + notes.getText()+"' WHERE VisitID = " + visitID);
+	  						stmt.execute();
+	  					} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+				}
+			});
 	    
 		//Initialize Static Information--> Patient Visit Table
 		Statement stmt;
@@ -247,9 +287,6 @@ public class PatientVisit_Controller implements Initializable {
 		ResultSet rs=stmt.executeQuery("SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg, p3.TestType " + 
 				"       FROM tests AS p1 INNER JOIN visits AS p2 INNER JOIN testtype as p3" + 
 				"         ON p1.VisitID= " +visitID + " AND p2.VisitID=" + visitID +" and p1.testTypeID = p3.TestTypeID"); 
-		System.out.println("SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg, p3.TestType " + 
-				"       FROM tests AS p1 INNER JOIN visits AS p2 INNER JOIN testtype as p3" + 
-				"         ON p1.VisitID= " +visitID + " AND p2.VisitID=" + visitID +" and p1.testTypeID = p3.TestTypeID");
 		testTableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
 			testTableContents.add(new Test_Model(rs.getString(6),"-",rs.getString(4)));
@@ -263,7 +300,7 @@ public class PatientVisit_Controller implements Initializable {
 		//Fill Prescription Table...
 		try {
 			Statement stmt=con.createStatement();
-			ResultSet rs=stmt.executeQuery("SELECT p1.PrescriptionID, p1.VisitID, p1.PrescriptionTypeID, p1.Dosage, p1.Instructions, p3.PrescriptionType,p2.Date" + 
+			ResultSet rs=stmt.executeQuery("SELECT p1.PrescriptionID, p1.VisitID, p1.PrescriptionTypeID, p1.Dosage, p1.Instructions, p3.PrescriptionType,p2.Date,p2.reason,p2.notes" + 
 					"       FROM prescriptions AS p1 INNER JOIN visits AS p2 INNER JOIN prescriptiontypes as p3" + 
 					"         ON p1.VisitID= " +visitID + " AND p2.VisitID=" + visitID +" and p1.PrescriptionTypeID = p3.PrescriptionTypeID"); 
 			prescriptionTableContents=FXCollections.observableArrayList();
@@ -277,6 +314,19 @@ public class PatientVisit_Controller implements Initializable {
 			prescriptions.setItems(prescriptionTableContents);
 			prescriptions.refresh();
 
+			//Update text areas
+			try {
+				Statement stmt=con.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT * FROM Visits WHERE VisitID = "+ visitID);
+				if(rs.next()) {
+					notes.setText(rs.getString(8));
+					symptoms.setText(rs.getString(3));
+				}
+
+			}
+			catch(SQLException e) {
+				System.err.println("Failed to set note text and symptom text!");
+			}
 	}
 	public int getVisitID() {
 		return visitID;
