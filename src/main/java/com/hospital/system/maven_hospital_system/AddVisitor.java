@@ -124,8 +124,8 @@ public class AddVisitor implements Initializable{
 		    			if(rs.next()) {
 		    				Integer firstVis = genFollowUp();
 		        		PatientVisit_Controller visit = new PatientVisit_Controller(origStage,con,userID,firstVis);
-		        		System.out.println("INSERT INTO Visits VALUES("+firstVis+","+"'10-10-2045' , '-' , "+userID+","+"-1" +", "+ genFollowUp()+ ", '-' )");
-						PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+firstVis+","+"'10-10-2045'" +", "+"'-'," + userID+","+"-1" +", "+ genFollowUp()+ ", '-' )");
+		        		System.out.println("INSERT INTO Visits VALUES("+firstVis+","+"'10-10-2045' , '-' , "+userID+","+"-1" +", "+ genFollowUp()+ ", '-','-' )");
+						PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+firstVis+","+"'10-10-2045'" +", "+"'-'," + userID+","+"-1" +", "+ genFollowUp()+ ", '-', '-' )");
 						stmt2.execute();
 		    			}
 		    			updateTable();
