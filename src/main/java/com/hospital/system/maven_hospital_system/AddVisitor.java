@@ -28,16 +28,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 
 public class AddVisitor implements Initializable{
-	
+	private Callback<TableColumn<Visit_Model, Button>, TableCell<Visit_Model, Button>> cellFactory;
+
 	private  Visitor_Model temp;
 	private Integer userID=-1;
 	
@@ -56,7 +61,9 @@ public class AddVisitor implements Initializable{
 	@FXML
 	TableView<Visit_Model> table;
 	@FXML
-	TableColumn<Visit_Model,String> dateColumn,reasonColumn,doctorColumn,moreColumn;
+	TableColumn<Visit_Model,String> dateColumn,reasonColumn,doctorColumn;
+	@FXML
+	TableColumn<Visit_Model,Button>moreColumn;
 	@FXML
 	private ObservableList<Visit_Model> tableContents;
 
@@ -89,15 +96,49 @@ public class AddVisitor implements Initializable{
 		dateColumn.setCellValueFactory(new PropertyValueFactory("date"));
 		reasonColumn.setCellValueFactory(new PropertyValueFactory("reason"));
 		doctorColumn.setCellValueFactory(new PropertyValueFactory("doctor"));
+		
 		table.setOnMousePressed(new EventHandler<MouseEvent>() {
+			
 		    @Override 
 		    public void handle(MouseEvent event) {  //double click on user to change info...
-		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {    //TABLE VIEWS!!
-		        	System.out.println(userID);
-		        	PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID,((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
-		        }
+		    	
+		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {    //TABLE VIEWS! !
+		        	if(((Visit_Model)table.getSelectionModel().getSelectedItems().get(0))!= null)
+		        	{	PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID,((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
+		        	visits.getDisplay().setOnHidden(new EventHandler<WindowEvent>() {
+	        			@Override
+	        			public void handle(WindowEvent event) {
+	        				try {
+	        					System.out.println("Close Window");
+	        					updateTable();
+	        				} catch (SQLException e) {
+	        					// TODO Auto-generated catch block
+	        					e.printStackTrace();
+	        				}	
+	        			}});     
+		        	}	
+		        	else {
+		        		try {
+		    			Statement stmt=con.createStatement();
+		    			ResultSet rs=stmt.executeQuery("SELECT * FROM Patients WHERE patientID=" + userID); 
+		    			if(rs.next()) {
+		    				Integer firstVis = genFollowUp();
+		        		PatientVisit_Controller visit = new PatientVisit_Controller(origStage,con,userID,firstVis);
+		        		System.out.println("INSERT INTO Visits VALUES("+firstVis+","+"'10-10-2045' , '-' , "+userID+","+"-1" +", "+ genFollowUp()+ ", '-' )");
+						PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+firstVis+","+"'10-10-2045'" +", "+"'-'," + userID+","+"-1" +", "+ genFollowUp()+ ", '-' )");
+						stmt2.execute();
+		    			}
+		    			updateTable();
+		        		}
+		    			catch(Exception e) {
+		    				System.err.println("An error occurred when creating a visit on empty table on new patient!!");
+		    				e.printStackTrace();
+		    			}
+		        		}
+		        	}
+		        	}
 		    }
-		});
+		);
 				submitButton.setOnAction(
 		        new EventHandler<ActionEvent>() {
 		            @Override
@@ -139,6 +180,13 @@ public class AddVisitor implements Initializable{
 		            }
 		         });
 				
+				cellFactory = new Callback<TableColumn<Visit_Model,Button>, TableCell<Visit_Model,Button>>() {
+	                public TableCell call(TableColumn p) {
+	                    return new AddVisitCell();
+	                }
+				};
+				moreColumn.setCellFactory(cellFactory);
+								
 	}
 	public Stage getDisplay() {return dialog;}
 	public void display() {
@@ -268,7 +316,7 @@ public class AddVisitor implements Initializable{
 			ResultSet rs=stmt.executeQuery("SELECT * FROM visits WHERE PatientID = "+ userID); 
 			while(rs.next()) {
 				System.out.println("Prior visits.");
-				tableContents.add(new Visit_Model(rs.getString(2),rs.getString(3),rs.getInt(5),rs.getString(7),rs.getInt(1)));
+				tableContents.add(new Visit_Model(rs.getString(2),rs.getString(3),rs.getInt(5),rs.getString(7),rs.getInt(1),userID,rs.getInt(6),con));
 			}
 			}
 			catch(NullPointerException e) {
@@ -284,5 +332,23 @@ public class AddVisitor implements Initializable{
 		    LocalDate localDate = LocalDate.parse(dateString, formatter);
 		    return localDate;
 		}
+
+		public int genFollowUp() {
+			Random ran = new Random();
+			int newID = ran.nextInt((int) Math.pow(2,12));
+			try {
+			Statement stmt=con.createStatement();
+			ResultSet rs=stmt.executeQuery("SELECT * FROM Visits WHERE visitID=" + newID); 
+			if(rs.next())
+				return genFollowUp();
+			else
+				return (newID);
+			}
+			catch(SQLException e) {
+				System.err.println("Exception in handling new follow up id generation!");
+			}
+			return -1;
+			}
+
 
 }

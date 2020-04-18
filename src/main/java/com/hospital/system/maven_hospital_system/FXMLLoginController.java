@@ -100,6 +100,7 @@ public class FXMLLoginController<E> extends App implements Initializable{
 											failedAttempts();
 										}
 									}
+									//If credentials are valid...
 									else {
 										switchHome();
 									}
@@ -194,14 +195,17 @@ public class FXMLLoginController<E> extends App implements Initializable{
 		}
 		case 1:{
 			System.out.println("Doctor");
+			DoctorController doctor = new DoctorController(stage,scene,con,id);
 			break;
 		}
 		case 2:{
 			System.out.println("Nurse");
+			NurseController nurse = new NurseController(stage,scene,con,id);
 			break;
 		}
 		case 3:{
 			System.out.println("Lab Technician");
+			
 			break;
 		}
 		}

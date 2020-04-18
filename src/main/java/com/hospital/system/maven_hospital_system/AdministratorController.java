@@ -158,6 +158,7 @@ public class AdministratorController extends App implements Initializable{
 				
 			}
 		});
+		//When enter key is pressed
 		addRemoveColumn.setOnEditCommit(new EventHandler<CellEditEvent<Staff_Model,String>>(){
 			@Override
 			public void handle(CellEditEvent<Staff_Model, String> e) {
@@ -165,7 +166,7 @@ public class AdministratorController extends App implements Initializable{
 					((Staff_Model) e.getTableView().getItems().get(
 					            e.getTablePosition().getRow())
 					            ).setPass(e.getNewValue());
-					System.out.println("Pass = " +  e.getTableView().getItems().get(e.getTablePosition().getRow()).getPass());
+					
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -177,7 +178,7 @@ public class AdministratorController extends App implements Initializable{
 				
 			}
 		});
-
+		/* Password Column, shows when password is needed to be changed*/
 		addRemoveColumn.setCellFactory(new Callback<TableColumn<Staff_Model,String>, TableCell<Staff_Model,String>>() {         
 	        @Override
 	        public TableCell<Staff_Model, String> call(TableColumn<Staff_Model, String> cell) {
@@ -186,7 +187,6 @@ public class AdministratorController extends App implements Initializable{
 	    });	    
 		addRemoveColumn.setCellValueFactory(new PropertyValueFactory("pass"));
 		table.setItems(tableContents);
-		System.out.println("Ouch");
 		table.refresh();
 		final Stack<Integer> s = new Stack<>();//stack for action event handler to manage check marks
 		s.push(1);
@@ -231,7 +231,7 @@ public class AdministratorController extends App implements Initializable{
                 		}
                 	}
                 	catch(EmptyStackException ex) {
-                		System.out.print("Stack empty");
+                		System.out.print("Checkbox Stack Empty!");
                 }
                 	saveButton.setText("Remove Entry");
                 	s.add(2);
@@ -343,7 +343,6 @@ public class AdministratorController extends App implements Initializable{
 		ResultSet rs=stmt.executeQuery("SELECT * FROM users"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-			System.out.println(rs.getInt(1)+ " " + rs.getInt(2)+ " " + rs.getString(3)+ " " + rs.getString(4));
 			userIDs.add(Integer.toString(rs.getInt(2)));
 			if(rs.getInt(1)!= Integer.valueOf(identification) )
 					tableContents.add((new Staff_Model(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5))));	
@@ -392,13 +391,10 @@ public class AdministratorController extends App implements Initializable{
 		}
 	
 	@FXML private void addEntry() throws SQLException, NoSuchAlgorithmException{
-		//(1234,1,'Andrew','Jung','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',0)
 		Staff_Model temp =table.getSelectionModel().getSelectedItems().get(0);
 		try {
 			PreparedStatement stmt=con.prepareStatement("INSERT INTO `users` VALUES ("+temp.getUserID()
 								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' , '"+temp.getPass()+"',0)");
-			System.out.println("INSERT INTO `users` VALUES ("+temp.getUserID()
-								+ ","+temp.getUserRole()+", '"+temp.getFName()+"' , '"+temp.getLName()+"' ,'"+temp.getPass()+"',0)");
 			stmt.execute();
 		}
 		catch(SQLException e) {
