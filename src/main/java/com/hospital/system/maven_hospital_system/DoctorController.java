@@ -152,8 +152,10 @@ public class DoctorController implements Initializable {
 						"         ON p1.PhysicianID=" + docID +" AND p1.patientID=p2.patientID"); 
 				tableContents=FXCollections.observableArrayList();
 				while(rs.next()) {
-					if(LOCAL_DATE(rs.getString(3)).compareTo(LocalDate.now())>-1)
-						tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(3),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
+					LocalDate s = LOCAL_DATE(LocalDate.now().toString());
+					String tmp = s.getMonthValue() + "-" + s.getDayOfMonth()+"-" + s.getYear();
+					if(LOCAL_DATE(rs.getString(3)).compareTo(s)>-1)
+						tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(8),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
 				}
 				 table.setItems(tableContents);
 				}
@@ -181,10 +183,18 @@ public class DoctorController implements Initializable {
 	}
 	//Convert DB String to LocalDate object
 	private static final LocalDate LOCAL_DATE (String dateString){
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+		try {
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    LocalDate localDate = LocalDate.parse(dateString, formatter);
 	    return localDate;
+		}
+		catch(Exception e) {
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+		    LocalDate localDate = LocalDate.parse(dateString, formatter);
+		    return localDate;
+		}
 	}
+	
 	
 
 }

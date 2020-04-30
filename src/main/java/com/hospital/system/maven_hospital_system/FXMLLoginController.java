@@ -194,13 +194,13 @@ public class FXMLLoginController<E> extends App implements Initializable{
 			}
 		}
 		case 1:{
-			System.out.println("Doctor");
-			DoctorController doctor = new DoctorController(stage,scene,con,id);
+			System.out.println("Doctor" + Integer.valueOf(userField.getText()));
+			DoctorController doctor = new DoctorController(stage,scene,con,Integer.valueOf(userField.getText()));
 			break;
 		}
 		case 2:{
 			System.out.println("Nurse");
-			NurseController nurse = new NurseController(stage,scene,con,id);
+			NurseController nurse = new NurseController(stage,scene,con,Integer.valueOf(userField.getText()));
 			break;
 		}
 		case 3:{
