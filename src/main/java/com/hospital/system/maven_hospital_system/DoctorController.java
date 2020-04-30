@@ -28,6 +28,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+/**
+ * Controller for DoctorView--> Allows the doctor to view all upcoming patients
+ * @author spada
+ *
+ */
 public class DoctorController implements Initializable {
 	@FXML
 	private TableColumn<GenVisit_Model,String> patientName,DOB,patientGender,roomNum;

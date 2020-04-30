@@ -33,6 +33,13 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.converter.IntegerStringConverter;
 
+
+/*
+ * Nurse's Version of Modifying the Patient's Visit-- Can Modify:
+ * 	Doctor Number
+ * 	Notes
+ * Symptoms
+ */
 public class PatientVisit_Controller implements Initializable {
 
 	private Stage stage,visitStage;
@@ -123,7 +130,7 @@ public class PatientVisit_Controller implements Initializable {
 			    	temp.setFollowUpID(followUpID);
 			    	System.out.println("visit ID" + temp.getVisitID());
 					PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+temp.getVisitID()+",'"+temp.getDate() +"', '"+ temp.getReason()+"' , "+userID+
-							","+temp.getDoctor()+","+ temp.getFollowUpID() + ",'" +temp.getDiagnosis()+"')");
+							","+temp.getDoctor()+","+ temp.getFollowUpID() + ",'" +temp.getDiagnosis()+"', '" + temp.getNotes() + "' )");
 					stmt2.execute();
 
 		    	}
