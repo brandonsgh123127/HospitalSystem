@@ -98,15 +98,6 @@ public class PatientVisitEdit_Controller implements Initializable {
 		this.visitStage=display();
 	}
 	
-	public PatientVisitEdit_Controller(Integer userID, Integer visitID,Connection con) {
-		this.stage = new Stage();
-		this.userID=userID;
-		isNew = true;
-		this.visitID = visitID;
-		this.con=con;
-		System.out.println(userID);
-		this.visitStage=display();
-	}
 
 
 	@Override
@@ -276,6 +267,7 @@ public class PatientVisitEdit_Controller implements Initializable {
 				"         ON p1.PatientID=" + userID + " AND p2.patientID=" + userID +" AND p1.VisitID=" +visitID); 
 		genTableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
+			System.out.println(rs.getInt(1) +" " + rs.getString(5));
 			genTableContents.add(new GenVisit_Model(rs.getString(5) + ","+rs.getString(6),rs.getString(7),rs.getString(4),rs.getInt(3),rs.getInt(1),rs.getInt(2)));
 		}
 		 genTable.setItems(genTableContents);

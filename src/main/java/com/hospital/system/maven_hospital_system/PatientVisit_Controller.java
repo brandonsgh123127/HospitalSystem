@@ -33,6 +33,13 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.converter.IntegerStringConverter;
 
+
+/*
+ * Nurse's Version of Modifying the Patient's Visit-- Can Modify:
+ * 	Doctor Number
+ * 	Notes
+ * Symptoms
+ */
 public class PatientVisit_Controller implements Initializable {
 
 	private Stage stage,visitStage;
@@ -119,11 +126,11 @@ public class PatientVisit_Controller implements Initializable {
 		    	{
 		    		visitID=rs.getInt(6);
 		    		followUpID=genFollowUp();
-			    	Visit_Model temp = new Visit_Model("08-28-2045", "-", -1,"-", visitID,userID,followUpID,con,"");
+			    	Visit_Model temp = new Visit_Model("2045-08-28", "-", -1,"-", visitID,userID,followUpID,con,"");
 			    	temp.setFollowUpID(followUpID);
 			    	System.out.println("visit ID" + temp.getVisitID());
 					PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+temp.getVisitID()+",'"+temp.getDate() +"', '"+ temp.getReason()+"' , "+userID+
-							","+temp.getDoctor()+","+ temp.getFollowUpID() + ",'" +temp.getDiagnosis()+"')");
+							","+temp.getDoctor()+","+ temp.getFollowUpID() + ",'" +temp.getDiagnosis()+"', '" + temp.getNotes() + "' )");
 					stmt2.execute();
 
 		    	}
@@ -143,7 +150,7 @@ public class PatientVisit_Controller implements Initializable {
 	    
 	    //When save button is pressed, save data to new entry
 	    save.setOnAction(event -> {
-	    	Visit_Model temp = new Visit_Model("08-28-2045", "-", -1,"-", visitID,userID,followUpID,con,"");
+	    	Visit_Model temp = new Visit_Model("2045-08-28", "-", -1,"-", visitID,userID,followUpID,con,"");
 	    	Statement stmt;
 	    	//followUpID = genFollowUp();
 			try {
