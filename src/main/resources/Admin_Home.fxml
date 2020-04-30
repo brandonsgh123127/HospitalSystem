@@ -15,9 +15,9 @@
                <children>
                   <VBox alignment="TOP_CENTER" layoutY="105.0" prefHeight="1080.0" prefWidth="1920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label text="Admin">
+                        <Label text="Welcome Admin!">
                            <font>
-                              <Font name="Segoe UI Bold Italic" size="77.0" />
+                              <Font name="Linux Libertine G Regular" size="60.0" />
                            </font>
                         </Label>
                         <TabPane prefHeight="1080.0" prefWidth="1920.0" tabClosingPolicy="UNAVAILABLE">
@@ -68,7 +68,7 @@
                                                          </children>
                                                       </HBox>
                                                       <Button fx:id="submitButton" mnemonicParsing="false" text="Add" />
-                                                      <Label fx:id="hintLabel" text="When Finished, Please Press Save">
+                                                      <Label fx:id="hintLabel" text="When Finished Editing, Please Press Save.">
                                                          <font>
                                                             <Font name="Segoe UI Bold Italic" size="20.0" />
                                                          </font>
