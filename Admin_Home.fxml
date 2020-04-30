@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TitledPane collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1920.0" prefWidth="1920.0" text=" ">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1080.0" prefWidth="1920.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" layoutY="105.0" prefHeight="1080.0" prefWidth="1920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label text="Welcome Admin!">
+                           <font>
+                              <Font name="Linux Libertine G Regular" size="60.0" />
+                           </font>
+                        </Label>
+                        <TabPane prefHeight="1080.0" prefWidth="1920.0" tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab text="Add/Remove Staff">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1080.0" prefWidth="1920.0">
+                                       <children>
+                                          <HBox prefHeight="1760.0" prefWidth="1920.0">
+                                             <children>
+                                                <VBox prefHeight="1760.0" prefWidth="960.0">
+                                                   <children>
+                                                      <TableView fx:id="table" prefHeight="1760.0" prefWidth="960.0">
+                                                        <columns>
+                                                          <TableColumn fx:id="last" prefWidth="240.0" text="Last" />
+                                                            <TableColumn fx:id="first" prefWidth="240.0" text="First" />
+                                                          	<TableColumn fx:id="id" prefWidth="240.0" text="ID" />
+                                                            <TableColumn fx:id="role" prefWidth="175.0" text="Role" />
+                                                            <TableColumn fx:id="addRemoveColumn" prefWidth="65.0" />
+                                                        </columns>
+                                                      </TableView>
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="TOP_CENTER" prefHeight="1760.0" prefWidth="960.0">
+                                                   <children>
+                                                      <HBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="960.0">
+                                                         <children>
+                                                            <Label text="Add:">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="24.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <CheckBox fx:id="addCheck" alignment="BOTTOM_LEFT" mnemonicParsing="false">
+                                                               <HBox.margin>
+                                                                  <Insets left="15.0" right="15.0" top="5.0" />
+                                                               </HBox.margin>
+                                                            </CheckBox>
+                                                            <Label text="Remove:">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="24.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <CheckBox fx:id="removeCheck" mnemonicParsing="false">
+                                                               <HBox.margin>
+                                                                  <Insets left="15.0" right="15.0" top="5.0" />
+                                                               </HBox.margin>
+                                                            </CheckBox>
+                                                         </children>
+                                                      </HBox>
+                                                      <Button fx:id="submitButton" mnemonicParsing="false" text="Add" />
+                                                      <Label fx:id="hintLabel" text="When Finished Editing, Please Press Save.">
+                                                         <font>
+                                                            <Font name="Segoe UI Bold Italic" size="20.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets top="15.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Button fx:id="saveButton" mnemonicParsing="false" text="Save Entry">
+                                                         <VBox.margin>
+                                                            <Insets top="15.0" />
+                                                         </VBox.margin>
+                                                      </Button>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                            <Tab text="Reset Password">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              </content>
+                            </Tab>
+                          </tabs>
+                        </TabPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
+   </children>
+</VBox>
