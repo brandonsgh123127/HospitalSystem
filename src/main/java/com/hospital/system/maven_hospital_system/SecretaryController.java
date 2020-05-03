@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -50,7 +51,6 @@ public class SecretaryController implements Initializable{
 	private TextField search;
 	@FXML
 	private ObservableList<Visitor_Model> tableContents;	
-	//USER- 3270  PASS = gru
 	/*
 	 * Initialize for adding new patients... 
 	 */
@@ -59,7 +59,6 @@ public class SecretaryController implements Initializable{
 		lName.setCellValueFactory(new PropertyValueFactory("lName"));
 		fName.setCellValueFactory(new PropertyValueFactory("fName"));
 		DOB.setCellValueFactory(new PropertyValueFactory("DOB"));
-		
 		table.setOnMousePressed(new EventHandler<MouseEvent>() {
 		    @Override 
 		    public void handle(MouseEvent event) {  //double click on user to change info...
@@ -70,7 +69,7 @@ public class SecretaryController implements Initializable{
 	        			@Override
 	        			public void handle(WindowEvent event) {
 	        				try {
-	        					System.out.println("Update table sec");
+	        					System.out.println("Update table secretary");
 	        					updateDataTable();
 	        				} catch (SQLException e) {
 	        					// TODO Auto-generated catch block
@@ -134,6 +133,12 @@ public class SecretaryController implements Initializable{
 		Statement stmt=con.createStatement();
 		ResultSet rs=stmt.executeQuery("SELECT * FROM Patients"); 
 		tableContents=FXCollections.observableArrayList();
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		table.setItems(tableContents);
 		while(rs.next()) {
 			boolean res; //Boolean needed for adding data to table...  if resident or not

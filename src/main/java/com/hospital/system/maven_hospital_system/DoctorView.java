@@ -29,11 +29,11 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * Controller for DoctorView--> Allows the doctor to view all upcoming patients
+ * Class that will allow nurse to view Doctor's Patients
  * @author spada
  *
  */
-public class DoctorController implements Initializable {
+public class DoctorView implements Initializable {
 	@FXML
 	private TableColumn<GenVisit_Model,String> patientName,DOB,patientGender,roomNum;
 	@FXML
@@ -52,7 +52,7 @@ public class DoctorController implements Initializable {
 	private Stage docStage,stage,visitStage;
 	private Scene scene;
 	private Connection con;
-	private Integer docID;
+	private Integer docID,nurseID;
 	
 	private ObservableList<GenVisit_Model> tableContents;	
 
@@ -73,7 +73,7 @@ public class DoctorController implements Initializable {
 		    public void handle(MouseEvent event) {  //double click on user to change info...
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
 		        	if(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0))!=null) {
-		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getVisitID() +"Visit");
+		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID() +"PID");
 		        	PatientVisitEdit_Controller visit= new PatientVisitEdit_Controller(stage,con,((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID(),((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 	            	visitStage = visit.getDisplay();
 	            	visitStage.setOnHidden( new EventHandler<WindowEvent>() {
@@ -100,7 +100,7 @@ public class DoctorController implements Initializable {
 		        	if(((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0))!=null)
 		        	// Add Unassigned patients to Patients
 		        	try {
-						PreparedStatement stmt2=con.prepareStatement("UPDATE Visits SET PhysicianID="+docID+" WHERE PatientID=" + ((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0)).getPatientID()+" AND VisitID="+((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0)).getVisitID()+"");
+						PreparedStatement stmt2=con.prepareStatement("UPDATE Visits SET PhysicianID="+docID+" WHERE PatientID=" + ((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0)).getPatientID()+"");
 						stmt2.execute();
 						updateTable();
 					} catch (SQLException e) {
@@ -110,13 +110,14 @@ public class DoctorController implements Initializable {
 		        }
 		    }
 		});
-		
+
 	}
-	public DoctorController(Stage stage, Scene scene, Connection con,Integer id) {
+	public DoctorView(Stage stage, Scene scene, Connection con, Integer docID, Integer nurseID) {
 		this.stage=stage;
 		this.scene=scene;
 		this.con=con;
-		this.docID=id;
+		this.docID=docID;
+		this.nurseID=nurseID;
 		this.docStage = new Stage();
 		display();
 	}
@@ -152,9 +153,8 @@ public class DoctorController implements Initializable {
 						"         ON p1.PhysicianID=" + docID +" AND p1.patientID=p2.patientID"); 
 				tableContents=FXCollections.observableArrayList();
 				while(rs.next()) {
-					LocalDate s = LOCAL_DATE(LocalDate.now().toString());
-					String tmp = s.getMonthValue() + "-" + s.getDayOfMonth()+"-" + s.getYear();
-						tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(8),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
+					if(LOCAL_DATE(rs.getString(3)).compareTo(LocalDate.now())>-1)
+						tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(3),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
 				}
 				 table.setItems(tableContents);
 				}
@@ -171,7 +171,7 @@ public class DoctorController implements Initializable {
 						"         ON p1.PhysicianID=-1 AND p1.patientID=p2.patientID"); 
 				tableContents=FXCollections.observableArrayList();
 				while(rs.next()) {
-					tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(8),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
+					tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(3),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
 				}
 				 unTable.setItems(tableContents);
 				}
@@ -182,18 +182,10 @@ public class DoctorController implements Initializable {
 	}
 	//Convert DB String to LocalDate object
 	private static final LocalDate LOCAL_DATE (String dateString){
-		try {
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 	    LocalDate localDate = LocalDate.parse(dateString, formatter);
 	    return localDate;
-		}
-		catch(Exception e) {
-		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-		    LocalDate localDate = LocalDate.parse(dateString, formatter);
-		    return localDate;
-		}
 	}
-	
 	
 
 }

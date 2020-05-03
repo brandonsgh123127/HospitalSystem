@@ -43,6 +43,7 @@
                   <TableColumn fx:id="prescribedBy" prefWidth="86.0" text="Prescribed By" />
               </columns>
             </TableView>
+            <Button fx:id="save" layoutX="544.0" layoutY="55.0" mnemonicParsing="false" text="Save" textFill="#eb0000" visible="false" />
          </children></AnchorPane>
   </content>
 </TitledPane>
