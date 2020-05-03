@@ -62,7 +62,7 @@ public class PatientVisitEdit_Controller implements Initializable {
 	private boolean isNew;
 	private Integer userID;
 	private Integer visitID,followUpID;
-	private Integer presc;
+	private Integer presc,testNum;
 	@FXML
 	private TableView<GenVisit_Model> genTable;
 	@FXML
@@ -94,7 +94,7 @@ public class PatientVisitEdit_Controller implements Initializable {
 		isNew=false;
 		this.userID=userID;
 		this.visitID = visitID;
-		System.out.println(userID);
+		System.out.println(visitID +" Visit");
 		this.visitStage=display();
 	}
 	
@@ -118,10 +118,83 @@ public class PatientVisitEdit_Controller implements Initializable {
 		instructions.setCellValueFactory(new PropertyValueFactory("instructions"));
 		dateGiven.setCellValueFactory(new PropertyValueFactory("dateGiven"));
 		statusTest.setCellValueFactory(new PropertyValueFactory("status"));
+		tests.setEditable(true);
+	    test.setCellFactory(TextFieldTableCell.forTableColumn());
+	    status.setCellFactory(TextFieldTableCell.forTableColumn());
+	    result.setCellFactory(TextFieldTableCell.forTableColumn());    
+	   
+		
+		prescriptions.setEditable(true);
+	    medication.setCellFactory(TextFieldTableCell.forTableColumn());
+	    dose.setCellFactory(TextFieldTableCell.forTableColumn());
+	    count.setCellFactory(TextFieldTableCell.forTableColumn());    
+	    instructions.setCellFactory(TextFieldTableCell.forTableColumn());    
+	    dateGiven.setCellFactory(TextFieldTableCell.forTableColumn());    
+	    statusTest.setCellFactory(TextFieldTableCell.forTableColumn());  
+
 
 		//Allows values to be edited by nurse
 		genTable.setEditable(true);
 	    doctor.setCellFactory(TextFieldTableCell.<GenVisit_Model,Integer>forTableColumn(new IntegerStringConverter()));
+	    
+	    /*
+	     * If add test is pressed
+	     */
+	    
+	     addTest.setOnAction( new EventHandler<ActionEvent>(){ 
+		        @Override
+		    	public void handle(ActionEvent e) {
+		    		testNum=genTest();
+		    		testTableContents=FXCollections.observableArrayList();
+
+		    		testTableContents.add(new Test_Model("-1","-","-",String.valueOf(testNum)));
+					PreparedStatement stmt2;
+					try {
+						stmt2 = con.prepareStatement("INSERT INTO Tests VALUES("+testNum+",'"+visitID +"', "+ "-1"+" , "+"-1"+
+								","+"'-'"+",NULL)");
+						stmt2.execute();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		        	    updateTables();
+		        		//table.setItems(tableContents);
+		        }
+		    });
+	     
+	     /**
+	      * Any Modification to Tests Table goes here...
+	      */
+	     test.setOnEditCommit(new EventHandler<CellEditEvent<Test_Model,String>>(){
+
+				@Override
+				public void handle(CellEditEvent<Test_Model, String> event) {
+					 ((Test_Model) event.getTableView().getItems().get(
+					            event.getTablePosition().getRow())
+					            ).setTest(event.getNewValue());
+					 
+					 System.out.println(((Test_Model) event.getTableView().getItems().get(
+					            event.getTablePosition().getRow())
+					            ).getTest() + " Visit " + visitID);
+					try {
+						System.out.println("EDIT");
+						PreparedStatement stmt=con.prepareStatement("UPDATE tests SET TestTypeID= " +event.getTableView().getItems().get(
+						        event.getTablePosition().getRow()).getTest()+" WHERE VisitID = " + visitID + " AND testID= "+ event.getTableView().getItems().get(
+								        event.getTablePosition().getRow()).getTestID());
+						stmt.execute();
+						updateTables();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+				
+			});
+	     
+	     /*
+	      * Done
+	      */
 	    	
 	    /*
 	     * If Add Prescription is pressed
@@ -130,16 +203,115 @@ public class PatientVisitEdit_Controller implements Initializable {
 	     addPrescription.setOnAction( new EventHandler<ActionEvent>(){ 
 		        @Override
 		    	public void handle(ActionEvent e) {
-		        		prescriptions.setEditable(true);
-		        	    medication.setCellFactory(TextFieldTableCell.forTableColumn());
-		        	    dose.setCellFactory(TextFieldTableCell.forTableColumn());
-		        	    count.setCellFactory(TextFieldTableCell.forTableColumn());    
-		        	    instructions.setCellFactory(TextFieldTableCell.forTableColumn());    
-		        	    dateGiven.setCellFactory(TextFieldTableCell.forTableColumn());    
-		        	    statusTest.setCellFactory(TextFieldTableCell.forTableColumn());    
+		    		presc=genPrescription();
+		    		prescriptionTableContents.add(new Prescription_Model("-1", "-","-","-",LocalDate.now().toString(),"-",String.valueOf(presc)));
+					PreparedStatement stmt2;
+					try {
+						stmt2 = con.prepareStatement("INSERT INTO Prescriptions VALUES("+presc+",'"+visitID +"', "+ "-1"+" , '"+"-"+
+								"',"+"'-'"+")");
+						stmt2.execute();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		        	    updateTables();
 		        		//table.setItems(tableContents);
 		        }
 		    });
+
+	    	
+	     /**
+	      * ANY MODIFICATION TO PRESCRIPTIONS TABLE GOES HERE...
+	      */
+			medication.setOnEditCommit(new EventHandler<CellEditEvent<Prescription_Model,String>>(){
+
+				@Override
+				public void handle(CellEditEvent<Prescription_Model, String> event) {
+					 ((Prescription_Model) event.getTableView().getItems().get(
+					            event.getTablePosition().getRow())
+					            ).setMedication(event.getNewValue());
+					 
+					 System.out.println(((Prescription_Model) event.getTableView().getItems().get(
+					            event.getTablePosition().getRow())
+					            ).getMedication() + " Visit " + visitID);
+					try {
+						System.out.println("EDIT");
+						PreparedStatement stmt=con.prepareStatement("UPDATE prescriptions SET PrescriptionTypeID= " +event.getTableView().getItems().get(
+						        event.getTablePosition().getRow()).getMedication()+" WHERE VisitID = " + visitID + " AND prescriptionID= "+ event.getTableView().getItems().get(
+								        event.getTablePosition().getRow()).getID());
+						stmt.execute();
+						updateTables();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+				
+			});
+
+			dose.setOnEditCommit(new EventHandler<CellEditEvent<Prescription_Model,String>>(){
+
+				@Override
+				public void handle(CellEditEvent<Prescription_Model, String> event) {
+					 ((Prescription_Model) event.getTableView().getItems().get(
+					            event.getTablePosition().getRow())
+					            ).setDose(event.getNewValue());
+					 
+					 System.out.println(((Prescription_Model) event.getTableView().getItems().get(
+					            event.getTablePosition().getRow())
+					            ).getDose() + " Visit " + visitID);
+					try {
+						System.out.println("EDIT");
+						PreparedStatement stmt=con.prepareStatement("UPDATE prescriptions SET Dosage= '" +event.getTableView().getItems().get(
+						        event.getTablePosition().getRow()).getDose()+"' WHERE VisitID = " + visitID + " AND prescriptionID= "+ event.getTableView().getItems().get(
+								        event.getTablePosition().getRow()).getID());
+						stmt.execute();
+						updateTables();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+				
+			});
+
+			instructions.setOnEditCommit(new EventHandler<CellEditEvent<Prescription_Model,String>>(){
+
+				@Override
+				public void handle(CellEditEvent<Prescription_Model, String> event) {
+					 ((Prescription_Model) event.getTableView().getItems().get(
+					            event.getTablePosition().getRow())
+					            ).setInstructions(event.getNewValue());
+					 
+					 System.out.println(((Prescription_Model) event.getTableView().getItems().get(
+					            event.getTablePosition().getRow())
+					            ).getInstructions() + " Visit " + visitID);
+					try {
+						System.out.println("EDIT");
+						PreparedStatement stmt=con.prepareStatement("UPDATE prescriptions SET Instructions= '" +event.getTableView().getItems().get(
+						        event.getTablePosition().getRow()).getInstructions()+"' WHERE VisitID = " + visitID + " AND prescriptionID= "+ event.getTableView().getItems().get(
+								        event.getTablePosition().getRow()).getID());
+						stmt.execute();
+						updateTables();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+				
+			});
+	     
+			
+	     
+			
+	     
+	     /*
+	      * END PRESCRIPTION ON EDIT
+	      * 
+	      */
 	    visitStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent event) {
@@ -148,54 +320,6 @@ public class PatientVisitEdit_Controller implements Initializable {
 				visitStage.close();
 			}});
 	    
-//	    //When save button is pressed, save data to new entry
-//	    save.setOnAction(event -> {
-//	    	Visit_Model temp = new Visit_Model("08-28-2045", "-", -1,"-", visitID,userID,followUpID,con,"");
-//	    	Statement stmt;
-//	    	//followUpID = genFollowUp();
-//			try {
-//				stmt = con.createStatement();
-////				temp.setVisitID(temp.getFollowUpID());
-////				temp.setFollowUpID(genFollowUp());
-////				followUpID=temp.getFollowUpID();
-//				PreparedStatement stmt2=con.prepareStatement("INSERT INTO Visits VALUES("+temp.getVisitID()+",'"+temp.getDate() +"', '"+ temp.getReason()+"' , "+userID+
-//						","+temp.getDoctor()+","+ temp.getFollowUpID() + ",'" +temp.getDiagnosis()+"', '" +temp.getNotes()+"')");
-//				stmt2.execute();
-//
-//			} catch (SQLException e1) {
-//				try {
-//					PreparedStatement stmt2=con.prepareStatement("UPDATE Visits SET FollowUpID="+temp.getFollowUpID()+",Date='"+temp.getDate() +"', Reason='"+ temp.getReason()+"' , PatientID="+userID+
-//							",PhysicianID="+temp.getDoctor()+",followUpID="+ genFollowUp() + ",Results='" +temp.getDiagnosis()+"' WHERE patientID =" + userID);
-//				} catch (SQLException e2) {
-//					// TODO Auto-generated catch block
-//					
-//					System.out.println("Exception in relation to adding/modifying visit values.  Please Check Values entered in tables!");
-//					e2.printStackTrace();
-//				}
-//			}	    
-//			visitStage.hide();
-//			visitStage.close();
-//	    });
-			try {
-				prescriptionTableContents=FXCollections.observableArrayList();
-
-				stmt = con.createStatement();
-		    	ResultSet rs = stmt.executeQuery("SELECT * FROM Visits  WHERE patientID ="+userID+ " ORDER BY Date DESC LIMIT 1");
-		    	while(rs.next())
-		    	{
-		    		presc=genPrescription();
-		    		visitID=rs.getInt(6);
-		    		prescriptionTableContents.add(new Prescription_Model("", "","","","",""));
-					PreparedStatement stmt2=con.prepareStatement("INSERT INTO Prescriptions VALUES("+presc+",'"+visitID +"', "+ "-1"+" , '"+"-"+
-							"',"+"'-'"+")");
-					stmt2.execute();
-						updateTables();
-		    	}
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-	    	
 	  //When enter key is pressed
 	  		doctor.setOnEditCommit(new EventHandler<CellEditEvent<GenVisit_Model,Integer>>(){
 	  			@Override
@@ -261,7 +385,9 @@ public class PatientVisitEdit_Controller implements Initializable {
 	    
 		//Initialize Static Information--> Patient Visit Table
 		try {
+			System.out.println("PID " +userID + "visitID " + visitID );
 			stmt = con.createStatement();
+
 		ResultSet rs=stmt.executeQuery("        SELECT p1.VisitID, p1.patientID, p1.PhysicianID, p1.Results, p2.lName,p2.fName,p2.DateOfBirth" + 
 				"       FROM visits AS p1 INNER JOIN patients AS p2 " + 
 				"         ON p1.PatientID=" + userID + " AND p2.patientID=" + userID +" AND p1.VisitID=" +visitID); 
@@ -306,39 +432,43 @@ public class PatientVisitEdit_Controller implements Initializable {
 	 * Updates the Test and Prescription Tables...
 	 */
 	private void updateTables() {
-		
+		testTableContents=FXCollections.observableArrayList();
+		prescriptionTableContents=FXCollections.observableArrayList();
+
 		try {
 			System.out.println("Update test table");
 		Statement stmt=con.createStatement();
-		ResultSet rs=stmt.executeQuery("SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg, p3.TestType " + 
+
+		ResultSet rs=stmt.executeQuery("SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg " + 
 				"       FROM tests AS p1 INNER JOIN visits AS p2 INNER JOIN testtype as p3" + 
-				"         ON p1.VisitID= " +visitID + " AND p2.VisitID=" + visitID +" and p1.testTypeID = p3.TestTypeID"); 
-		testTableContents=FXCollections.observableArrayList();
+				"         ON p1.VisitID = " + visitID+ " and p1.VisitID = p2.VisitID"); 
 		while(rs.next()) {
-			testTableContents.add(new Test_Model(rs.getString(6),"-",rs.getString(4)));
+			testTableContents.add(new Test_Model(String.valueOf(rs.getInt(3)),"-",rs.getString(4),String.valueOf(rs.getInt(2))));
 					}
+		tests.setItems(testTableContents);
+		tests.refresh();
 		}
 		catch(SQLException e) {
 			System.out.println("An Exception occured when adding data to the Test Table!");
 		}
-		tests.setItems(testTableContents);
-		tests.refresh();
+
 		//Fill Prescription Table...
 		try {
 			Statement stmt=con.createStatement();
-			ResultSet rs=stmt.executeQuery("SELECT p1.PrescriptionID, p1.VisitID, p1.PrescriptionTypeID, p1.Dosage, p1.Instructions, p3.PrescriptionType,p2.Date,p2.reason,p2.notes" + 
-					"       FROM prescriptions AS p1 INNER JOIN visits AS p2 INNER JOIN prescriptiontypes as p3" + 
-					"         ON p1.VisitID= " +visitID + " AND p2.VisitID=" + visitID +""); 
-			prescriptionTableContents=FXCollections.observableArrayList();
+			ResultSet rs=stmt.executeQuery("SELECT p1.PrescriptionID, p1.VisitID, p1.PrescriptionTypeID, p1.Dosage, p1.Instructions,p2.Date" + 
+					"       FROM prescriptions AS p1 INNER JOIN visits AS p2" + 
+					"         ON p1.VisitID=p2.VisitID AND p1.VisitID="+visitID); 
 			while(rs.next()) {
-				prescriptionTableContents.add(new Prescription_Model(rs.getString(3),rs.getString(4),"-1",rs.getString(5),rs.getString(7),"-"));  //ADD A STATUS STRING IN 
+				System.out.println("Looping prescription table "+ rs.getInt(1));
+				prescriptionTableContents.add(new Prescription_Model(rs.getString(3),rs.getString(4),"-1",rs.getString(5),rs.getString(6),"-",String.valueOf(rs.getInt(1))));  //ADD A STATUS STRING IN 
 						}
+			prescriptions.setItems(prescriptionTableContents);
+			prescriptions.refresh();
 			}
 			catch(SQLException e) {
 				System.out.println("An Exception occured when adding data to the Prescription Table!");
 			}
-			prescriptions.setItems(prescriptionTableContents);
-			prescriptions.refresh();
+
 
 			//Update text areas
 			try {
@@ -374,5 +504,22 @@ public class PatientVisitEdit_Controller implements Initializable {
 		}
 		return -1;
 		}
+	public int genTest() {
+		Random ran = new Random();
+		int newID = ran.nextInt((int) Math.pow(2,15));
+		try {
+		Statement stmt=con.createStatement();
+		ResultSet rs=stmt.executeQuery("SELECT * FROM Tests WHERE testID=" + newID); 
+		if(rs.next())
+			return genPrescription();
+		else
+			return (newID);
+		}
+		catch(SQLException e) {
+			System.err.println("Exception in handling new follow up id generation!");
+		}
+		return -1;
+		}
+
 
 }

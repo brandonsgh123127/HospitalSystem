@@ -6,12 +6,13 @@ public class Test_Model {
 	
 	private SimpleStringProperty test;
 	private SimpleStringProperty status;
-	private SimpleStringProperty result;
+	private SimpleStringProperty result,testID;
 
-	public Test_Model(String test, String status,String result) {
+	public Test_Model(String test, String status,String result,String testID) {
 		this.test = new SimpleStringProperty(test);
 		this.status= new SimpleStringProperty(status);
 		this.result = new SimpleStringProperty(result);
+		this.testID= new SimpleStringProperty(testID);
 	}
 	public String getTest() {
 		return test.get();
@@ -30,6 +31,12 @@ public class Test_Model {
 	}
 	public void setResult(String result) {
 		this.result=new SimpleStringProperty(result);
+	}
+	public String getTestID() {
+		return testID.get();
+	}
+	public void setTestID(String testID) {
+		this.testID=new SimpleStringProperty(testID);
 	}
 
 }
