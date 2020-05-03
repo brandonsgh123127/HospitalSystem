@@ -15,7 +15,7 @@
                   <TableColumn fx:id="room" minWidth="0.0" prefWidth="52.0" text="Room" />
                   <TableColumn fx:id="diagnosis" minWidth="0.0" prefWidth="104.0" text="Final Diagnosis" />
                   <TableColumn fx:id="doctor" minWidth="0.0" prefWidth="123.0" text="Doctor" />
-                  <TableColumn prefWidth="105.0" text="Date" />
+                  <TableColumn fx:id="date" prefWidth="105.0" text="Date" />
               </columns>
             </TableView>
             <Button fx:id="visitHistory" layoutX="487.0" layoutY="73.0" mnemonicParsing="false" text="Visit History" />
