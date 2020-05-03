@@ -5,15 +5,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="227.0" prefWidth="314.0" text="Edit Test" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<TitledPane animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="227.0" prefWidth="314.0" text="Edit Test" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <content>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="312.0">
          <children>
-            <TableView layoutX="7.0" layoutY="14.0" prefHeight="68.0" prefWidth="296.0">
+            <TableView fx:id="table" layoutX="7.0" layoutY="14.0" prefHeight="68.0" prefWidth="296.0">
               <columns>
-                <TableColumn prefWidth="150.0" text="Patient Name" />
-                <TableColumn prefWidth="83.0" text="Date of Birth" />
-                  <TableColumn prefWidth="62.0" text="Gender" />
+                <TableColumn fx:id="patient" prefWidth="150.0" text="Patient Name" />
+                <TableColumn fx:id="DOB" prefWidth="83.0" text="Date of Birth" />
               </columns>
             </TableView>
             <Label layoutX="29.0" layoutY="95.0" text="Test: " />
@@ -24,8 +23,8 @@
                 <MenuItem mnemonicParsing="false" text="Incomplete" />
               </items>
             </MenuButton>
-            <Text layoutX="64.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="150.0" />
-            <TextField layoutX="77.0" layoutY="124.0" />
+            <Text fx:id="test" layoutX="64.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="150.0" />
+            <TextField fx:id="result" layoutX="77.0" layoutY="124.0" />
          </children></AnchorPane>
   </content>
 </TitledPane>
