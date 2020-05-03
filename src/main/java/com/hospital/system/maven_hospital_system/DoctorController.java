@@ -73,7 +73,7 @@ public class DoctorController implements Initializable {
 		    public void handle(MouseEvent event) {  //double click on user to change info...
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
 		        	if(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0))!=null) {
-		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID() +"PID");
+		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getVisitID() +"Visit");
 		        	PatientVisitEdit_Controller visit= new PatientVisitEdit_Controller(stage,con,((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID(),((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 	            	visitStage = visit.getDisplay();
 	            	visitStage.setOnHidden( new EventHandler<WindowEvent>() {
@@ -100,7 +100,7 @@ public class DoctorController implements Initializable {
 		        	if(((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0))!=null)
 		        	// Add Unassigned patients to Patients
 		        	try {
-						PreparedStatement stmt2=con.prepareStatement("UPDATE Visits SET PhysicianID="+docID+" WHERE PatientID=" + ((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0)).getPatientID()+"");
+						PreparedStatement stmt2=con.prepareStatement("UPDATE Visits SET PhysicianID="+docID+" WHERE PatientID=" + ((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0)).getPatientID()+" AND VisitID="+((GenVisit_Model) unTable.getSelectionModel().getSelectedItems().get(0)).getVisitID()+"");
 						stmt2.execute();
 						updateTable();
 					} catch (SQLException e) {
@@ -154,7 +154,6 @@ public class DoctorController implements Initializable {
 				while(rs.next()) {
 					LocalDate s = LOCAL_DATE(LocalDate.now().toString());
 					String tmp = s.getMonthValue() + "-" + s.getDayOfMonth()+"-" + s.getYear();
-					if(LOCAL_DATE(rs.getString(3)).compareTo(s)>-1)
 						tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(8),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
 				}
 				 table.setItems(tableContents);
@@ -172,7 +171,7 @@ public class DoctorController implements Initializable {
 						"         ON p1.PhysicianID=-1 AND p1.patientID=p2.patientID"); 
 				tableContents=FXCollections.observableArrayList();
 				while(rs.next()) {
-					tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(3),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
+					tableContents.add(new GenVisit_Model(rs.getString(6) + ","+rs.getString(7),rs.getString(8),"-",rs.getInt(5),rs.getInt(1),rs.getInt(4)));
 				}
 				 unTable.setItems(tableContents);
 				}

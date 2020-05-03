@@ -27,5 +27,5 @@ SELECT p1.VisitID, p1.followUpID,p1.Date,p1.patientID, p1.PhysicianID,p2.lName,p
 SELECT * FROM Visits  WHERE patientID = 4043 ORDER BY Date DESC LIMIT 1;
 DELETE from visits where visitId=1808;
 INSERT INTO Visits VALUES(2381,'2045-10-10' , '-' , 23834,-1, 140, '-' );
-select * from users;
+select * from patients;
 SELECT * FROM visits where visitID = 2;
