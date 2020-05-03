@@ -6,15 +6,16 @@ public class Prescription_Model {
 
 	private SimpleStringProperty medication;
 	private SimpleStringProperty dose;
-	private SimpleStringProperty count,instructions,dateGiven,status;
+	private SimpleStringProperty count,instructions,dateGiven,status,id;
 
-	public Prescription_Model(String medication, String dose,String count,String instructions,String dateGiven,String status) {
+	public Prescription_Model(String medication, String dose,String count,String instructions,String dateGiven,String status,String ID) {
 		this.medication = new SimpleStringProperty(medication);
 		this.dose= new SimpleStringProperty(dose);
 		this.count= new SimpleStringProperty(count);
 		this.instructions= new SimpleStringProperty(instructions);
 		this.dateGiven= new SimpleStringProperty(dateGiven);
 		this.status= new SimpleStringProperty(status);
+		this.id= new SimpleStringProperty(ID);
 	}
 
 	public String getMedication() {
@@ -62,6 +63,12 @@ public class Prescription_Model {
 
 	public void setStatus(String status) {
 		this.status = new SimpleStringProperty(status);
+	}
+	public String getID() {
+		return id.get();
+	}
+	public void setID(String id) {
+		this.id= new SimpleStringProperty(id);
 	}
 	
 }

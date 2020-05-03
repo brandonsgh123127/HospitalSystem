@@ -69,7 +69,7 @@ public class SecretaryController implements Initializable{
 	        			@Override
 	        			public void handle(WindowEvent event) {
 	        				try {
-	        					System.out.println("Update table sec");
+	        					System.out.println("Update table secretary");
 	        					updateDataTable();
 	        				} catch (SQLException e) {
 	        					// TODO Auto-generated catch block
@@ -133,6 +133,12 @@ public class SecretaryController implements Initializable{
 		Statement stmt=con.createStatement();
 		ResultSet rs=stmt.executeQuery("SELECT * FROM Patients"); 
 		tableContents=FXCollections.observableArrayList();
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		table.setItems(tableContents);
 		while(rs.next()) {
 			boolean res; //Boolean needed for adding data to table...  if resident or not

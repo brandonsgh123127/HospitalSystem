@@ -135,7 +135,7 @@ public class FXMLLoginController<E> extends App implements Initializable{
 		try{Class.forName("com.mysql.jdbc.Driver");}catch(Exception e) {System.out.println("FAILED jdbc driver");}
 		try {
 		con=DriverManager.getConnection(
-		"jdbc:mysql://localhost:3306/mydb?characterEncoding=latin1&useConfigs=maxPerformance","root","Abcdefg123");
+		"jdbc:mysql://localhost:3306/mydb?characterEncoding=latin1&useConfigs=maxPerformance&useSSL","root","Abcdefg123");
 		Statement stmt=con.createStatement();  
 		//CHECK LOGIN!!!
 		ResultSet rs=stmt.executeQuery("SELECT * FROM users WHERE UserID=" + userField.getText());  
@@ -194,13 +194,13 @@ public class FXMLLoginController<E> extends App implements Initializable{
 			}
 		}
 		case 1:{
-			System.out.println("Doctor");
-			DoctorController doctor = new DoctorController(stage,scene,con,id);
+			System.out.println("Doctor" + Integer.valueOf(userField.getText()));
+			DoctorController doctor = new DoctorController(stage,scene,con,Integer.valueOf(userField.getText()));
 			break;
 		}
 		case 2:{
 			System.out.println("Nurse");
-			NurseController nurse = new NurseController(stage,scene,con,id);
+			NurseController nurse = new NurseController(stage,scene,con,Integer.valueOf(userField.getText()));
 			break;
 		}
 		case 3:{

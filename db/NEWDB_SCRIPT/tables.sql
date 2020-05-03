@@ -168,3 +168,9 @@ show tables from mydb;
 use mydb;
 -- Insert Default Users, 1234 admin, 3270 root
 Insert into visits Values(2,'04-20-2020','-',4043,2808,3,'-','-');
+/*Default user for Doctor is 1234 admin, default admin account is 1235 root*/
+INSERT INTO `users` VALUES (1234,1,'Andrew','Jung','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',0),(1235,0,'John','Smith','4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2',1);
+INSERT INTO Visits VALUES(2381,'10-10-2045' , '-' , 11421,1234, 140, '-' ),(3,'10-01-2020' , '-' , 32546,-1, 140, '-' );
+INSERT INTO `Patients` VALUES (11421,'Appleseed', 'Johnny' , '120 Apple Hill', 'Hartford' , 'CT' , '06110' , '2229102902' , 'appleseed@johnny.com' , '1988-04-09' , 'United States' , 1 , '19038202-38930' , 'Aet');
+INSERT INTO `Patients` VALUES (32546,'Spada', 'Brandon' , '2 Hill Dr', 'New York' , 'NY' , '99999' , '222392942' , 'spada@jmail.com' , '1998-01-01' , 'United States' , 1 , '19035342-38930' , 'Aet');
+INSERT INTO `roles` VALUES (0,'admin'),(1,'Doctor'),(2,'Nurse'),(3,'Lab Tech'),(4,'Patient');
