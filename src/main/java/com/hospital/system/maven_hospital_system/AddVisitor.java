@@ -30,10 +30,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -94,6 +96,11 @@ public class AddVisitor implements Initializable{
 		fields.add(lName);fields.add(state);fields.add(email);
 		fields.add(address);fields.add(zip);fields.add(insuranceCarrier);
 		dateColumn.setCellValueFactory(new PropertyValueFactory("date"));
+		dateColumn.setEditable(true);
+		table.setEditable(true);
+		dateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+	    reasonColumn.setEditable(false);doctorColumn.setEditable(false);
+
 		reasonColumn.setCellValueFactory(new PropertyValueFactory("reason"));
 		doctorColumn.setCellValueFactory(new PropertyValueFactory("doctor"));
 		
@@ -104,7 +111,13 @@ public class AddVisitor implements Initializable{
 		    	
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {    //TABLE VIEWS! !
 		        	if(((Visit_Model)table.getSelectionModel().getSelectedItems().get(0))!= null)
-		        	{	PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID,((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
+		        	{
+		        		if((table.getSelectionModel().getSelectedCells().get(0).getTableColumn().isEditable())) 
+		        		{
+		        			System.out.println("Date");
+		        		}
+		        		else {
+		        		PatientVisit_Controller visits = new PatientVisit_Controller(origStage,con,userID,((Visit_Model)table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 		        	visits.getDisplay().setOnHidden(new EventHandler<WindowEvent>() {
 	        			@Override
 	        			public void handle(WindowEvent event) {
@@ -115,7 +128,8 @@ public class AddVisitor implements Initializable{
 	        					// TODO Auto-generated catch block
 	        					e.printStackTrace();
 	        				}	
-	        			}});     
+	        			}});  
+		        		}
 		        	}	
 		        	else {
 		        		try {
@@ -180,6 +194,29 @@ public class AddVisitor implements Initializable{
 		            }
 		         });
 				
+				
+				dateColumn.setOnEditCommit(new EventHandler<CellEditEvent<Visit_Model,String>>(){
+
+					@Override
+					public void handle(CellEditEvent<Visit_Model, String> event) {
+						event.getTableView().getItems().get(
+						        event.getTablePosition().getRow()).setDate(event.getNewValue());
+						PreparedStatement stmt;
+						try {
+							stmt = con.prepareStatement("UPDATE Visits SET Date= '" +event.getTableView().getItems().get(
+							        event.getTablePosition().getRow()).getDate()+"' WHERE VisitID = " + event.getTableView().getItems().get(
+									        event.getTablePosition().getRow()).getVisitID());
+							stmt.execute();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						
+					}
+					
+				});
+				
 				cellFactory = new Callback<TableColumn<Visit_Model,Button>, TableCell<Visit_Model,Button>>() {
 	                public TableCell call(TableColumn p) {
 	                    return new AddVisitCell();
@@ -238,6 +275,8 @@ public class AddVisitor implements Initializable{
 							","+temp.getLName()+", '"+temp.getFName()+"' , '"+temp.getAddress()+"', '" + temp.getCity()+ "' , '"
 							+ temp.getState() + "' , '" + temp.getZip() + "' , '"+ temp.getPhone()  + "' , '" + temp.getEmail()+ "' , '" + temp.getDOB()+ "' , '" + 
 							"United States" + "' , " + "1" + " , '"+ temp.getInsuranceID() + "' , '" + temp.getInsuranceProvider() + "')");
+
+
 				}
 				else {//else
 					stmt=con.prepareStatement("INSERT INTO `Patients` VALUES ("+temp.getUserID()+
@@ -251,6 +290,7 @@ public class AddVisitor implements Initializable{
 					
 				}
 					stmt.execute();
+
 			} //IF ENTRY already exists, update the information through query
 			catch(SQLException e) {
 				System.out.println("Updating Entry..." +temp.getUserID());
@@ -263,6 +303,7 @@ public class AddVisitor implements Initializable{
 				}
 			dialog.hide();
 			dialog.close();
+
 		}
 		
 
@@ -311,12 +352,14 @@ public class AddVisitor implements Initializable{
 			
 			//Then, update visit table....
 			try {
-				System.out.println(userID);
+				System.out.println(userID +"TEST");
 				tableContents=FXCollections.observableArrayList();
-			ResultSet rs=stmt.executeQuery("SELECT * FROM visits WHERE PatientID = "+ userID); 
+				ResultSet rs=stmt.executeQuery("        SELECT p1.Date,p1.Reason,p1.Results,p1.VisitID, p1.patientID, p1.PhysicianID, p2.LastName,p2.FirstName,p1.followUpID,p1.Notes" + 
+						"       FROM visits AS p1 INNER JOIN users AS p2 " + 
+						"         ON p1.PatientID=" + userID + " AND (p2.UserID=p1.PhysicianID)");  
 			while(rs.next()) {
 				System.out.println("Prior visits.");
-				tableContents.add(new Visit_Model(rs.getString(2),rs.getString(3),rs.getInt(5),rs.getString(7),rs.getInt(1),userID,rs.getInt(6),con,rs.getString(8)));
+				tableContents.add(new Visit_Model(rs.getString(1),rs.getString(2),rs.getString(7)+"," + rs.getString(8),rs.getString(3),rs.getInt(4),userID,rs.getInt(9),con,rs.getString(10)));
 			}
 			}
 			catch(NullPointerException e) {

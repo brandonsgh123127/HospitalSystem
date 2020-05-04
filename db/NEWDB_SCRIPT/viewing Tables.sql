@@ -17,6 +17,7 @@ SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg,p3.TestType
 select * from prescriptions;
 select * from testType;
 select * from tests;
+select * from prescriptionTypes;
 select * from users;
 INSERT INTO visits VALUES(3,'04-25-2021','Physical',4043,-1,4,'-');
 SELECT p1.PrescriptionID, p1.VisitID, p1.PrescriptionTypeID, p1.Dosage, p1.Instructions,p2.Date
@@ -29,5 +30,7 @@ DELETE from visits where visitId=1808;
 INSERT INTO Visits VALUES(2381,'2045-10-10' , '-' , 23834,-1, 140, '-' );
 select * from patients;
 SELECT * FROM visits;
-delete from visits;
+INSERT INTO Users Values(-1,-1,'Null','Null','',0);
+INSERT INTO prescriptionTypes VALUES(1,'Depressant'),(2,'Stimulant'),(3,'Opiod'),(4,'Other'),(-1,'Unknown');
+delete from tests;
 drop table tests;
