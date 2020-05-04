@@ -151,7 +151,7 @@ public class PatientVisitEdit_Controller implements Initializable {
 					PreparedStatement stmt2;
 					try {
 						stmt2 = con.prepareStatement("INSERT INTO Tests VALUES("+testNum+",'"+visitID +"', "+ "-1"+" , "+"-1"+
-								","+"'-'"+",NULL)");
+								","+"'-'"+",'Incomplete',NULL)");
 						stmt2.execute();
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block

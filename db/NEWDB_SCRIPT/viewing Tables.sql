@@ -15,7 +15,7 @@ SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg,p3.TestType
        FROM visits AS p1 INNER JOIN patients AS p2 
          ON p1.patientID= 4043 AND p2.patientID=4043 AND p1.visitID = 1;
 select * from prescriptions;
-select * from sits;
+select * from testType;
 select * from tests;
 select * from users;
 INSERT INTO visits VALUES(3,'04-25-2021','Physical',4043,-1,4,'-');
@@ -29,4 +29,4 @@ DELETE from visits where visitId=1808;
 INSERT INTO Visits VALUES(2381,'2045-10-10' , '-' , 23834,-1, 140, '-' );
 select * from patients;
 SELECT * FROM visits;
-delete from prescriptions;
+delete from tests;

@@ -28,6 +28,7 @@ CREATE TABLE `tests` (
   `TestTypeID` int NOT NULL,
   `TechID` int DEFAULT NULL,
   `Result` longtext,
+  `Status` varchar(20),
   `ResultImg` longblob,
   PRIMARY KEY (`TestID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

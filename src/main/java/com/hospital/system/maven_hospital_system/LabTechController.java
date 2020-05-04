@@ -34,7 +34,7 @@ import javafx.stage.WindowEvent;
  */
 public class LabTechController implements Initializable {
 	@FXML
-	private TableColumn<Test_Model,String> patient,test,result,view;
+	private TableColumn<Test_Model,String> patient,test,result,view,status;
 	@FXML
 	private TableColumn<Test_Model,String> unPatient,unTest,unDate;
 	@FXML
@@ -89,7 +89,7 @@ public class LabTechController implements Initializable {
 		patient.setCellValueFactory(new PropertyValueFactory("patient"));
 		test.setCellValueFactory(new PropertyValueFactory("test"));
 		result.setCellValueFactory(new PropertyValueFactory("result"));
-		view.setCellValueFactory(new PropertyValueFactory("status"));
+		status.setCellValueFactory(new PropertyValueFactory("status"));
 		//UnAssigned tests
 		unPatient.setCellValueFactory(new PropertyValueFactory("patient"));
 		unTest.setCellValueFactory(new PropertyValueFactory("test"));
@@ -148,12 +148,12 @@ public class LabTechController implements Initializable {
 		tableContents=FXCollections.observableArrayList();
 		try {
 			stmt = con.createStatement();
-		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date" + 
+		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date,p1.Status" + 
 				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3" + 
 				"         ON p1.TechID=" + techID +" AND p2.patientID=p3.patientID AND p1.visitID= p3.visitID"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-				tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),String.valueOf(rs.getInt(2)),"-",rs.getString(4),String.valueOf(rs.getInt(1))));
+				tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),String.valueOf(rs.getInt(2)),rs.getString(9),rs.getString(4),String.valueOf(rs.getInt(1))));
 		}
 		 table.setItems(tableContents);
 		}
@@ -170,7 +170,7 @@ public class LabTechController implements Initializable {
 				"         ON p1.TechID=-1"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-			tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),String.valueOf(rs.getInt(2)),"-",rs.getString(4),String.valueOf(rs.getInt(1))));
+			tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),String.valueOf(rs.getInt(2)),"Incomplete",rs.getString(4),String.valueOf(rs.getInt(1))));
 		}
 		 untable.setItems(tableContents);
 		}
