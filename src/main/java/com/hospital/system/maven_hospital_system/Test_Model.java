@@ -4,15 +4,29 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Test_Model {
 	
-	private SimpleStringProperty test;
+	private SimpleStringProperty patient,date,test;
 	private SimpleStringProperty status;
 	private SimpleStringProperty result,testID;
 
-	public Test_Model(String test, String status,String result,String testID) {
+	public Test_Model(String patient,String date,String test, String status,String result,String testID) {
+		this.patient=new SimpleStringProperty(patient);
+		this.date=new SimpleStringProperty(date);
 		this.test = new SimpleStringProperty(test);
 		this.status= new SimpleStringProperty(status);
 		this.result = new SimpleStringProperty(result);
 		this.testID= new SimpleStringProperty(testID);
+	}
+	public String getPatient() {
+		return patient.get();
+	}
+	public void setPatient(String patient) {
+		this.patient=new SimpleStringProperty(patient);
+	}
+	public String getDate() {
+		return date.get();
+	}
+	public void setDate(String date) {
+		this.date=new SimpleStringProperty(date);
 	}
 	public String getTest() {
 		return test.get();

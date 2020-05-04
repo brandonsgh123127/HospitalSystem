@@ -205,7 +205,7 @@ public class FXMLLoginController<E> extends App implements Initializable{
 		}
 		case 3:{
 			System.out.println("Lab Technician");
-			
+			LabTechController tech = new LabTechController(stage,scene,con,Integer.valueOf(userField.getText()));
 			break;
 		}
 		}

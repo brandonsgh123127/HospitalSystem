@@ -147,11 +147,11 @@ public class PatientVisitEdit_Controller implements Initializable {
 		    		testNum=genTest();
 		    		testTableContents=FXCollections.observableArrayList();
 
-		    		testTableContents.add(new Test_Model("-1","-","-",String.valueOf(testNum)));
+		    		testTableContents.add(new Test_Model("","","-1","-","-",String.valueOf(testNum)));
 					PreparedStatement stmt2;
 					try {
 						stmt2 = con.prepareStatement("INSERT INTO Tests VALUES("+testNum+",'"+visitID +"', "+ "-1"+" , "+"-1"+
-								","+"'-'"+",NULL)");
+								","+"'-'"+",'Incomplete',NULL)");
 						stmt2.execute();
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
@@ -439,11 +439,11 @@ public class PatientVisitEdit_Controller implements Initializable {
 			System.out.println("Update test table");
 		Statement stmt=con.createStatement();
 
-		ResultSet rs=stmt.executeQuery("SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg " + 
-				"       FROM tests AS p1 INNER JOIN visits AS p2 INNER JOIN testtype as p3" + 
-				"         ON p1.VisitID = " + visitID+ " and p1.VisitID = p2.VisitID"); 
+		ResultSet rs=stmt.executeQuery("SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg, p2.Date, p4.lName,p4.fName" + 
+				"       FROM tests AS p1 INNER JOIN visits AS p2 INNER JOIN testtype as p3 INNER JOIN patients as p4" + 
+				"         ON p1.VisitID = " + visitID+ " and p1.VisitID = p2.VisitID and p4.PatientID = p2.PatientID"); 
 		while(rs.next()) {
-			testTableContents.add(new Test_Model(String.valueOf(rs.getInt(3)),"-",rs.getString(4),String.valueOf(rs.getInt(2))));
+			testTableContents.add(new Test_Model(rs.getString(7) + "," + rs.getString(8),rs.getString(6),String.valueOf(rs.getInt(3)),"-",rs.getString(4),String.valueOf(rs.getInt(2))));
 					}
 		tests.setItems(testTableContents);
 		tests.refresh();
