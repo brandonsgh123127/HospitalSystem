@@ -9,7 +9,7 @@ A team-based project meant to simulate the software development process.  This s
 
 ## What is not working
 
-  *Minor bugs regarding search functions.
+  * Minor bugs regarding search functions.
 
 
 ## How to Run?
