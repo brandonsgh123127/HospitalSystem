@@ -14,10 +14,10 @@ A team-based project meant to simulate the software development process.  This s
 
 ## How to Run?
 
-Open project through eclipse, naviagate to src/main/java/com/hospital/system/maven_hospital_system/app.java/com/hospital/system/maven_hospital_system/app.java
+  * Open project through eclipse, naviagate to src/main/java/com/hospital/system/maven_hospital_system/app.java/com/hospital/system/maven_hospital_system/app.java
 
-JDBC drivers might need to be installed*
+  * JDBC drivers might need to be installed*
 
-Make sure you have a mysql server, with user root, and password as Abcdefg123, or switch inside the FXMLLoginController.java file.
+  * Make sure you have a mysql server, with user root, and password as Abcdefg123, or switch inside the FXMLLoginController.java file.
 
-Create multiple types of users using default admin login.
+  * Create multiple types of users using default admin login.
