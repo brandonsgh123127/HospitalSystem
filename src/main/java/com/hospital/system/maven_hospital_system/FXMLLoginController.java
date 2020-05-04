@@ -135,7 +135,7 @@ public class FXMLLoginController<E> extends App implements Initializable{
 		try{Class.forName("com.mysql.jdbc.Driver");}catch(Exception e) {System.out.println("FAILED jdbc driver");}
 		try {
 		con=DriverManager.getConnection(
-		"jdbc:mysql://localhost:3306/mydb?characterEncoding=latin1&useConfigs=maxPerformance&useSSL","root","Abcdefg123");
+		"jdbc:mysql://localhost:3306/mydb?characterEncoding=latin1&useConfigs=maxPerformance&useSSL","user","Abcdefg123");
 		Statement stmt=con.createStatement();  
 		//CHECK LOGIN!!!
 		ResultSet rs=stmt.executeQuery("SELECT * FROM users WHERE UserID=" + userField.getText());  
