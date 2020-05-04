@@ -297,7 +297,7 @@ public class PatientVisit_Controller implements Initializable {
 				"         ON p1.VisitID= " +visitID + " AND p2.VisitID=" + visitID +" and p1.testTypeID = p3.TestTypeID AND p4.PatientID = p1.PatientID"); 
 		testTableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-			testTableContents.add(new Test_Model(rs.getString(8) + "," + rs.getString(9),rs.getString(7),rs.getString(6),rs.getString(9),rs.getString(4),String.valueOf(rs.getInt(2))));
+			testTableContents.add(new Test_Model(rs.getString(8) + "," + rs.getString(9),rs.getString(7),rs.getString(6),rs.getString(10),rs.getString(4),String.valueOf(rs.getInt(2))));
 					}
 		}
 		catch(SQLException e) {

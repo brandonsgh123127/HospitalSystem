@@ -75,11 +75,12 @@ public class SecretaryController implements Initializable{
 	        					// TODO Auto-generated catch block
 	        					e.printStackTrace();
 	        				}	
-	        			}});           		
+	        			}});         
 
 		        }
 		    }
 		});
+  		
 
 		
 	    addUser.setOnAction(
@@ -139,7 +140,6 @@ public class SecretaryController implements Initializable{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		table.setItems(tableContents);
 		while(rs.next()) {
 			boolean res; //Boolean needed for adding data to table...  if resident or not
 			if(rs.getInt(12) ==1)
