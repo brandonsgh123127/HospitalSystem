@@ -145,9 +145,6 @@ public class PatientVisitEdit_Controller implements Initializable {
 		        @Override
 		    	public void handle(ActionEvent e) {
 		    		testNum=genTest();
-		    		testTableContents=FXCollections.observableArrayList();
-
-		    		testTableContents.add(new Test_Model("","","-1","-","-",String.valueOf(testNum)));
 					PreparedStatement stmt2;
 					try {
 						stmt2 = con.prepareStatement("INSERT INTO Tests VALUES("+testNum+",'"+visitID +"', "+ "-1"+" , "+"-1"+

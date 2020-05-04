@@ -74,7 +74,7 @@ public class DoctorView implements Initializable {
 		        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
 		        	if(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0))!=null) {
 		        	System.out.println(((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID() +"PID");
-		        	PatientVisitEdit_Controller visit= new PatientVisitEdit_Controller(stage,con,((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID(),((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
+		        	PatientVisit_Controller visit= new PatientVisit_Controller(stage,con,((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getPatientID(),((GenVisit_Model) table.getSelectionModel().getSelectedItems().get(0)).getVisitID());
 	            	visitStage = visit.getDisplay();
 	            	visitStage.setOnHidden( new EventHandler<WindowEvent>() {
 	        			@Override
@@ -182,7 +182,7 @@ public class DoctorView implements Initializable {
 	}
 	//Convert DB String to LocalDate object
 	private static final LocalDate LOCAL_DATE (String dateString){
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    LocalDate localDate = LocalDate.parse(dateString, formatter);
 	    return localDate;
 	}

@@ -29,4 +29,5 @@ DELETE from visits where visitId=1808;
 INSERT INTO Visits VALUES(2381,'2045-10-10' , '-' , 23834,-1, 140, '-' );
 select * from patients;
 SELECT * FROM visits;
-delete from tests;
+delete from visits;
+drop table tests;
