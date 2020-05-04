@@ -28,7 +28,7 @@ A team-based project meant to simulate the software development process.  This s
   ** Password by default is Abcdefg123 for logging in
   * Next, in server, go to file -> open sql script
    **Open tables.sql in db/NEWDB_SCRIPT**
-   ** Execute the sql script
+   * Execute the sql script
   * Now, in src/main/java/com/hospital/system/maven_hospital_system/app.java/com/hospital/system/maven_hospital_system/FXMLLoginController.java on line 138, change whatever is necessary to meet login needs.  
   * Run file through app.java,
   * JDBC drivers might need to be installed*
