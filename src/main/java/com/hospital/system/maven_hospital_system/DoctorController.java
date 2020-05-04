@@ -23,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -109,6 +110,41 @@ public class DoctorController implements Initializable {
 					}
 		        }
 		    }
+		});
+
+		searchBar.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				Statement stmt;
+				try {
+					stmt = con.createStatement();
+					if(searchBar.getText().equals(null))
+						updateTable();
+					else {
+					ResultSet rs=stmt.executeQuery("SELECT * FROM Patients WHERE (PatientID LIKE '%"+ searchBar.getText() +
+							"%' OR fName LIKE '%"+ searchBar.getText() + "%' OR lName LIKE '%"+ searchBar.getText() +
+							"%' OR CONCAT(fName,'', lName, '') LIKE \"%"+ searchBar.getText() + "%\") "); 
+					tableContents=FXCollections.observableArrayList();
+					
+					while(rs.next()) {
+						Statement stmt2 = con.createStatement();
+
+						ResultSet rs2=stmt2.executeQuery("SELECT * FROM Visits WHERE PhysicianID=" +docID+" AND (PatientID LIKE '%"+ rs.getInt(1) +
+								"%') ");
+						while(rs2.next()) {
+							tableContents.add(new GenVisit_Model(rs.getString(2) + "," +rs.getString(3), rs.getString(10),rs2.getString(7),rs2.getInt(5),rs2.getInt(1),rs.getInt(4)));
+						}
+					}
+					table.setItems(tableContents);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
 		});
 		
 	}
