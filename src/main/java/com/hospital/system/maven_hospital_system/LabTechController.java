@@ -23,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -138,6 +139,37 @@ public class LabTechController implements Initializable {
 		        }
 		    }
 		});
+
+		search.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				Statement stmt;
+				try {
+					stmt = con.createStatement();
+					if(search.getText().equals(null))
+						updateTables();
+					else {
+					ResultSet rs=stmt.executeQuery("SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result,"
+							+ " p2.lName,p2.fName,p2.DateOfBirth,p2.Country,p1.Status,p3.testTypeID,p3.TestType" + 
+							"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN testType as p3" + 
+							"         ON (p1.TechID=" + techID +" AND (p3.TestType LIKE '%"+ search.getText() +   
+									"%'))			"); 
+					tableContents=FXCollections.observableArrayList();
+					while(rs.next()) {
+						
+							tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),"-",rs.getString(11),rs.getString(9),rs.getString(4),String.valueOf(rs.getInt(1))));
+					}
+					table.setItems(tableContents);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		});
 		
 	}
 	
@@ -148,12 +180,12 @@ public class LabTechController implements Initializable {
 		tableContents=FXCollections.observableArrayList();
 		try {
 			stmt = con.createStatement();
-		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date,p1.Status" + 
-				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3" + 
-				"         ON p1.TechID=" + techID +" AND p2.patientID=p3.patientID AND p1.visitID= p3.visitID"); 
+		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date,p1.Status,p4.testTypeID,p4.TestType" + 
+				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3 INNER JOIN testType AS p4" + 
+				"         ON (p1.TechID=" + techID +" AND p1.TestTypeID=p4.TestTypeID ) AND p2.patientID=p3.patientID AND p1.visitID= p3.visitID"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-				tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),String.valueOf(rs.getInt(2)),rs.getString(9),rs.getString(4),String.valueOf(rs.getInt(1))));
+				tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),rs.getString(11),rs.getString(9),rs.getString(4),String.valueOf(rs.getInt(1))));
 		}
 		 table.setItems(tableContents);
 		}
@@ -165,12 +197,12 @@ public class LabTechController implements Initializable {
 		tableContents=FXCollections.observableArrayList();
 		try {
 			stmt = con.createStatement();
-		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date" + 
-				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3" + 
-				"         ON p1.TechID=-1"); 
+		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date,p4.testTypeID,p4.TestType" + 
+				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3 INNER JOIN testType AS p4" + 
+				"         ON (p1.TechID=-1 AND p1.TestTypeID=p4.testTypeID )"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-			tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),String.valueOf(rs.getInt(2)),"Incomplete",rs.getString(4),String.valueOf(rs.getInt(1))));
+			tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),rs.getString(10),"Incomplete",rs.getString(4),String.valueOf(rs.getInt(1))));
 		}
 		 untable.setItems(tableContents);
 		}

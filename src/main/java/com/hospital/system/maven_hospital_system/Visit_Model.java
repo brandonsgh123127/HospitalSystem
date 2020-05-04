@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class Visit_Model {
 	private SimpleStringProperty date;
 	private SimpleStringProperty reason;
-	private SimpleIntegerProperty doctor;
+	private SimpleStringProperty doctor;
 	private SimpleStringProperty diagnosis,notes;
 	private SimpleIntegerProperty visitID,patientID;
 	private Connection con;
@@ -17,10 +17,10 @@ public class Visit_Model {
 	/*
 	 * Visits Table For Patient Information View
 	 */
-	public Visit_Model(String date, String reason, Integer doctor,String diagnosis, Integer visitID,Integer patientID,Integer followUpID,Connection con,String notes) {
+	public Visit_Model(String date, String reason, String doctor,String diagnosis, Integer visitID,Integer patientID,Integer followUpID,Connection con,String notes) {
 		this.date = new SimpleStringProperty(date);
 		this.reason = new SimpleStringProperty(reason);
-		this.doctor= new SimpleIntegerProperty(doctor);
+		this.doctor= new SimpleStringProperty(doctor);
 		this.diagnosis= new SimpleStringProperty(diagnosis);
 		this.visitID= new SimpleIntegerProperty(visitID);
 		this.patientID= new SimpleIntegerProperty(patientID);
@@ -41,11 +41,11 @@ public class Visit_Model {
 	public void setReason(String reason) {
 		this.reason = new SimpleStringProperty(reason);
 	}
-	public Integer getDoctor() {
+	public String getDoctor() {
 		return doctor.get();
 	}
-	public void setDoctor(Integer doctor) {
-		this.doctor= new SimpleIntegerProperty(doctor);
+	public void setDoctor(String doctor) {
+		this.doctor= new SimpleStringProperty(doctor);
 	}
 	public String getDiagnosis() {
 		return diagnosis.get();

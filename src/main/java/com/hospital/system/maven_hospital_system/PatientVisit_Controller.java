@@ -126,7 +126,7 @@ public class PatientVisit_Controller implements Initializable {
 		    	{
 		    		visitID=rs.getInt(6);
 		    		followUpID=genFollowUp();
-			    	Visit_Model temp = new Visit_Model("2045-08-28", "-", -1,"-", visitID,userID,followUpID,con,"");
+			    	Visit_Model temp = new Visit_Model("2045-08-28", "-", "-1","-", visitID,userID,followUpID,con,"");
 			    	temp.setVisitID(visitID);
 			    	temp.setFollowUpID(followUpID);
 			    	System.out.println("visit ID" + temp.getVisitID());
@@ -151,7 +151,7 @@ public class PatientVisit_Controller implements Initializable {
 	    
 	    //When save button is pressed, save data to new entry
 	    save.setOnAction(event -> {
-	    	Visit_Model temp = new Visit_Model("05-24-2050", "-", -1,"-", visitID,userID,followUpID,con,"");
+	    	Visit_Model temp = new Visit_Model("05-24-2050", "-", "-1","-", visitID,userID,followUpID,con,"");
 	    	Statement stmt;
 	    	//followUpID = genFollowUp();
 			try {
