@@ -275,8 +275,7 @@ public class AddVisitor implements Initializable{
 							","+temp.getLName()+", '"+temp.getFName()+"' , '"+temp.getAddress()+"', '" + temp.getCity()+ "' , '"
 							+ temp.getState() + "' , '" + temp.getZip() + "' , '"+ temp.getPhone()  + "' , '" + temp.getEmail()+ "' , '" + temp.getDOB()+ "' , '" + 
 							"United States" + "' , " + "1" + " , '"+ temp.getInsuranceID() + "' , '" + temp.getInsuranceProvider() + "')");
-					dialog.hide();
-					dialog.close();
+
 
 				}
 				else {//else
@@ -291,8 +290,6 @@ public class AddVisitor implements Initializable{
 					
 				}
 					stmt.execute();
-					dialog.hide();
-					dialog.close();
 
 			} //IF ENTRY already exists, update the information through query
 			catch(SQLException e) {
@@ -304,6 +301,9 @@ public class AddVisitor implements Initializable{
 															+ "' where patientID = "+temp.getUserID());
 				stmt.execute();
 				}
+			dialog.hide();
+			dialog.close();
+
 		}
 		
 
