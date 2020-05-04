@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,7 +43,7 @@ import javafx.util.converter.IntegerStringConverter;
  */
 public class PatientVisit_Controller implements Initializable {
 
-	private Stage stage,visitStage;
+	private Stage stage,visitStage,dialog;
 	private Connection con;
 	private boolean isNew;
 	private Integer userID;
@@ -148,6 +149,23 @@ public class PatientVisit_Controller implements Initializable {
 				visitStage.hide();
 				visitStage.close();
 			}});
+	    
+	    visitHistory.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+	        	AddVisitor add = new AddVisitor(stage,con, userID);
+            	dialog = add.getDisplay();
+            	dialog.setOnHidden( new EventHandler<WindowEvent>() {
+        			@Override
+        			public void handle(WindowEvent event) {
+        				System.out.println("Update table secretary");
+						updateTables();	
+        			}});         
+				
+			}
+	    	
+	    });
 	    
 	    //When save button is pressed, save data to new entry
 	    save.setOnAction(event -> {
@@ -294,14 +312,15 @@ public class PatientVisit_Controller implements Initializable {
 		Statement stmt=con.createStatement();
 		ResultSet rs=stmt.executeQuery("SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg, p3.TestType,p2.Date,p4.lName,p4.fName,p1.Status" + 
 				"       FROM tests AS p1 INNER JOIN visits AS p2 INNER JOIN testtype as p3 INNER JOIN patients as p4" + 
-				"         ON p1.VisitID= " +visitID + " AND p2.VisitID=" + visitID +" and p1.testTypeID = p3.TestTypeID AND p4.PatientID = p1.PatientID"); 
+				"         ON p1.VisitID= " +visitID + " AND p2.VisitID=" + visitID +" and p1.testTypeID = p3.TestTypeID AND p4.PatientID = p2.PatientID"); 
 		testTableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-			testTableContents.add(new Test_Model(rs.getString(8) + "," + rs.getString(9),rs.getString(7),rs.getString(6),rs.getString(9),rs.getString(4),String.valueOf(rs.getInt(2))));
+			testTableContents.add(new Test_Model(rs.getString(8) + "," + rs.getString(9),rs.getString(7),rs.getString(6),rs.getString(10),rs.getString(4),String.valueOf(rs.getInt(2))));
 					}
 		}
 		catch(SQLException e) {
 			System.out.println("An Exception occured when adding data to the Test Table!");
+			e.printStackTrace();
 		}
 		tests.setItems(testTableContents);
 		tests.refresh();

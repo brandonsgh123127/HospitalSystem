@@ -275,6 +275,8 @@ public class AddVisitor implements Initializable{
 							","+temp.getLName()+", '"+temp.getFName()+"' , '"+temp.getAddress()+"', '" + temp.getCity()+ "' , '"
 							+ temp.getState() + "' , '" + temp.getZip() + "' , '"+ temp.getPhone()  + "' , '" + temp.getEmail()+ "' , '" + temp.getDOB()+ "' , '" + 
 							"United States" + "' , " + "1" + " , '"+ temp.getInsuranceID() + "' , '" + temp.getInsuranceProvider() + "')");
+
+
 				}
 				else {//else
 					stmt=con.prepareStatement("INSERT INTO `Patients` VALUES ("+temp.getUserID()+
@@ -288,6 +290,7 @@ public class AddVisitor implements Initializable{
 					
 				}
 					stmt.execute();
+
 			} //IF ENTRY already exists, update the information through query
 			catch(SQLException e) {
 				System.out.println("Updating Entry..." +temp.getUserID());
@@ -300,6 +303,7 @@ public class AddVisitor implements Initializable{
 				}
 			dialog.hide();
 			dialog.close();
+
 		}
 		
 
@@ -348,11 +352,11 @@ public class AddVisitor implements Initializable{
 			
 			//Then, update visit table....
 			try {
-				System.out.println(userID);
+				System.out.println(userID +"TEST");
 				tableContents=FXCollections.observableArrayList();
 				ResultSet rs=stmt.executeQuery("        SELECT p1.Date,p1.Reason,p1.Results,p1.VisitID, p1.patientID, p1.PhysicianID, p2.LastName,p2.FirstName,p1.followUpID,p1.Notes" + 
 						"       FROM visits AS p1 INNER JOIN users AS p2 " + 
-						"         ON p1.PatientID=" + userID + " AND p2.UserID=p1.PhysicianID");  
+						"         ON p1.PatientID=" + userID + " AND (p2.UserID=p1.PhysicianID)");  
 			while(rs.next()) {
 				System.out.println("Prior visits.");
 				tableContents.add(new Visit_Model(rs.getString(1),rs.getString(2),rs.getString(7)+"," + rs.getString(8),rs.getString(3),rs.getInt(4),userID,rs.getInt(9),con,rs.getString(10)));

@@ -152,9 +152,10 @@ public class LabTechController implements Initializable {
 					else {
 					ResultSet rs=stmt.executeQuery("SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result,"
 							+ " p2.lName,p2.fName,p2.DateOfBirth,p2.Country,p1.Status,p3.testTypeID,p3.TestType" + 
-							"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN testType as p3" + 
+							"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN testType as p3 INNER JOIN Visits as p4" + 
 							"         ON (p1.TechID=" + techID +" AND (p3.TestType LIKE '%"+ search.getText() +   
-									"%'))			"); 
+									"%' OR p2.fName LIKE '%"+ search.getText() +   "%' OR p2.lName LIKE '%" +
+							search.getText() + "%' ) AND p1.VisitID = p4.VisitID AND p4.PatientID = p2.PatientID AND p3.TestTypeID	 = p1.TestTypeID)			"); 
 					tableContents=FXCollections.observableArrayList();
 					while(rs.next()) {
 						
@@ -179,12 +180,14 @@ public class LabTechController implements Initializable {
 		Statement stmt;
 		tableContents=FXCollections.observableArrayList();
 		try {
+			System.out.println("Tech ID " + techID);
 			stmt = con.createStatement();
 		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date,p1.Status,p4.testTypeID,p4.TestType" + 
 				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3 INNER JOIN testType AS p4" + 
-				"         ON (p1.TechID=" + techID +" AND p1.TestTypeID=p4.TestTypeID ) AND p2.patientID=p3.patientID AND p1.visitID= p3.visitID"); 
+				"         ON (p1.TechID=" + techID +"  AND (p2.patientID=p3.patientID AND p3.visitID=p1.visitID) AND p1.visitID= p3.visitID AND p1.TestTypeID = p4.TestTypeID)"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
+			System.out.print(" Test "+ rs.getInt(1) );
 				tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),rs.getString(11),rs.getString(9),rs.getString(4),String.valueOf(rs.getInt(1))));
 		}
 		 table.setItems(tableContents);
@@ -199,7 +202,7 @@ public class LabTechController implements Initializable {
 			stmt = con.createStatement();
 		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date,p4.testTypeID,p4.TestType" + 
 				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3 INNER JOIN testType AS p4" + 
-				"         ON (p1.TechID=-1 AND p1.TestTypeID=p4.testTypeID )"); 
+				"         ON (p1.TechID=-1 AND p1.TestTypeID=p4.testTypeID AND p1.VisitID = p3.VisitID 	AND p2.PatientID = p3.PatientID )"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
 			tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),rs.getString(10),"Incomplete",rs.getString(4),String.valueOf(rs.getInt(1))));

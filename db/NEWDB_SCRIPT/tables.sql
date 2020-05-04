@@ -52,15 +52,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Sample`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Sample` (
-  `Name` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`Name`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`Visits`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Visits` (
@@ -104,14 +95,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `mydb`.`Tests`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Tests` (
-  `TestID` INT NOT NULL,
-  `VisitID` INT NOT NULL,
-  `TestTypeID` INT NOT NULL,
-  `TechID` INT NULL,
-  `Result` LONGTEXT NULL,
-  `ResultImg` LONGBLOB NULL,
-  PRIMARY KEY (`TestID`))
+CREATE TABLE `tests` (
+  `TestID` int NOT NULL,
+  `VisitID` int NOT NULL,
+  `TestTypeID` int NOT NULL,
+  `TechID` int DEFAULT NULL,
+  `Result` longtext,
+  `Status` varchar(20),
+  `ResultImg` longblob,
+  PRIMARY KEY (`TestID`)
+)
 ENGINE = InnoDB;
 
 
@@ -174,3 +167,7 @@ INSERT INTO Visits VALUES(2381,'10-10-2045' , '-' , 11421,1234, 140, '-' ),(3,'1
 INSERT INTO `Patients` VALUES (11421,'Appleseed', 'Johnny' , '120 Apple Hill', 'Hartford' , 'CT' , '06110' , '2229102902' , 'appleseed@johnny.com' , '1988-04-09' , 'United States' , 1 , '19038202-38930' , 'Aet');
 INSERT INTO `Patients` VALUES (32546,'Spada', 'Brandon' , '2 Hill Dr', 'New York' , 'NY' , '99999' , '222392942' , 'spada@jmail.com' , '1998-01-01' , 'United States' , 1 , '19035342-38930' , 'Aet');
 INSERT INTO `roles` VALUES (0,'admin'),(1,'Doctor'),(2,'Nurse'),(3,'Lab Tech'),(4,'Patient');
+INSERT INTO testType VALUES(1,'Blood'),(2,'Stool'),(3,'Urine'),(4,'Other'),(-1,'Unknown');
+INSERT INTO prescriptionTypes VALUES(1,'Depressant'),(2,'Stimulant'),(3,'Opiod'),(4,'Other'),(-1,'Unknown');
+INSERT INTO Users Values(-1,-1,'Null','Null','',0);
+
