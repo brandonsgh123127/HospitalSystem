@@ -20,6 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -80,6 +81,39 @@ public class NurseController implements Initializable{
 
 		        }
 		    }
+		});
+		
+		
+		/*
+		 * Search For Specific Doctor
+		 */
+		Search.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				Statement stmt;
+				try {
+					stmt = con.createStatement();
+					if(Search.getText().equals(null))
+						updateDataTable();
+					else {
+					ResultSet rs=stmt.executeQuery("SELECT * FROM users WHERE RoleID=1 AND (UserID LIKE '%"+ Search.getText() +
+							"%' OR FirstName LIKE '%"+ Search.getText() + "%' OR LastName LIKE '%"+ Search.getText() +
+							"%' OR CONCAT(FirstName,'', LastName, '') LIKE \"%"+ Search.getText() + "%\") "); 
+					tableContents=FXCollections.observableArrayList();
+					
+					while(rs.next()) {
+						tableContents.add(new Staff_Model(rs.getInt(1),1,rs.getString(3),rs.getString(4)));
+					}
+					table.setItems(tableContents);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
 		});
 	}
 	
