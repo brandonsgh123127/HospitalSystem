@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,7 +43,7 @@ import javafx.util.converter.IntegerStringConverter;
  */
 public class PatientVisit_Controller implements Initializable {
 
-	private Stage stage,visitStage;
+	private Stage stage,visitStage,dialog;
 	private Connection con;
 	private boolean isNew;
 	private Integer userID;
@@ -148,6 +149,23 @@ public class PatientVisit_Controller implements Initializable {
 				visitStage.hide();
 				visitStage.close();
 			}});
+	    
+	    visitHistory.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+	        	AddVisitor add = new AddVisitor(stage,con, userID);
+            	dialog = add.getDisplay();
+            	dialog.setOnHidden( new EventHandler<WindowEvent>() {
+        			@Override
+        			public void handle(WindowEvent event) {
+        				System.out.println("Update table secretary");
+						updateTables();	
+        			}});         
+				
+			}
+	    	
+	    });
 	    
 	    //When save button is pressed, save data to new entry
 	    save.setOnAction(event -> {

@@ -56,7 +56,7 @@ import javafx.util.converter.IntegerStringConverter;
  */
 public class PatientVisitEdit_Controller implements Initializable {
 
-	private Stage stage,visitStage;
+	private Stage stage,visitStage,dialog;
 	private Statement stmt;
 	private Connection con;
 	private boolean isNew;
@@ -316,6 +316,24 @@ public class PatientVisitEdit_Controller implements Initializable {
 				visitStage.hide();
 				visitStage.close();
 			}});
+	    
+	    visitHistory.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+	        	AddVisitor add = new AddVisitor(stage,con, userID);
+            	dialog = add.getDisplay();
+            	dialog.setOnHidden( new EventHandler<WindowEvent>() {
+        			@Override
+        			public void handle(WindowEvent event) {
+        				System.out.println("Update table secretary");
+						updateTables();	
+        			}});         
+				
+			}
+	    	
+	    });
+	    
 	    
 	  //When enter key is pressed
 	  		doctor.setOnEditCommit(new EventHandler<CellEditEvent<GenVisit_Model,Integer>>(){
