@@ -441,7 +441,7 @@ public class PatientVisitEdit_Controller implements Initializable {
 
 		ResultSet rs=stmt.executeQuery("SELECT p1.VisitID, p1.TestID, p1.TestTypeID, p1.Result, p1.ResultImg, p2.Date, p4.lName,p4.fName" + 
 				"       FROM tests AS p1 INNER JOIN visits AS p2 INNER JOIN testtype as p3 INNER JOIN patients as p4" + 
-				"         ON p1.VisitID = " + visitID+ " and p1.VisitID = p2.VisitID and p4.PatientID = p2.VisitID"); 
+				"         ON p1.VisitID = " + visitID+ " and p1.VisitID = p2.VisitID and p4.PatientID = p2.PatientID"); 
 		while(rs.next()) {
 			testTableContents.add(new Test_Model(rs.getString(7) + "," + rs.getString(8),rs.getString(6),String.valueOf(rs.getInt(3)),"-",rs.getString(4),String.valueOf(rs.getInt(2))));
 					}
