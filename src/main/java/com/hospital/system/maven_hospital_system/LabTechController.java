@@ -23,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -34,7 +35,7 @@ import javafx.stage.WindowEvent;
  */
 public class LabTechController implements Initializable {
 	@FXML
-	private TableColumn<Test_Model,String> patient,test,result,view;
+	private TableColumn<Test_Model,String> patient,test,result,view,status;
 	@FXML
 	private TableColumn<Test_Model,String> unPatient,unTest,unDate;
 	@FXML
@@ -89,7 +90,7 @@ public class LabTechController implements Initializable {
 		patient.setCellValueFactory(new PropertyValueFactory("patient"));
 		test.setCellValueFactory(new PropertyValueFactory("test"));
 		result.setCellValueFactory(new PropertyValueFactory("result"));
-		view.setCellValueFactory(new PropertyValueFactory("status"));
+		status.setCellValueFactory(new PropertyValueFactory("status"));
 		//UnAssigned tests
 		unPatient.setCellValueFactory(new PropertyValueFactory("patient"));
 		unTest.setCellValueFactory(new PropertyValueFactory("test"));
@@ -138,6 +139,38 @@ public class LabTechController implements Initializable {
 		        }
 		    }
 		});
+
+		search.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				Statement stmt;
+				try {
+					stmt = con.createStatement();
+					if(search.getText().equals(null))
+						updateTables();
+					else {
+					ResultSet rs=stmt.executeQuery("SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result,"
+							+ " p2.lName,p2.fName,p2.DateOfBirth,p2.Country,p1.Status,p3.testTypeID,p3.TestType" + 
+							"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN testType as p3 INNER JOIN Visits as p4" + 
+							"         ON (p1.TechID=" + techID +" AND (p3.TestType LIKE '%"+ search.getText() +   
+									"%' OR p2.fName LIKE '%"+ search.getText() +   "%' OR p2.lName LIKE '%" +
+							search.getText() + "%' ) AND p1.VisitID = p4.VisitID AND p4.PatientID = p2.PatientID AND p3.TestTypeID	 = p1.TestTypeID)			"); 
+					tableContents=FXCollections.observableArrayList();
+					while(rs.next()) {
+						
+							tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),"-",rs.getString(11),rs.getString(9),rs.getString(4),String.valueOf(rs.getInt(1))));
+					}
+					table.setItems(tableContents);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		});
 		
 	}
 	
@@ -147,13 +180,15 @@ public class LabTechController implements Initializable {
 		Statement stmt;
 		tableContents=FXCollections.observableArrayList();
 		try {
+			System.out.println("Tech ID " + techID);
 			stmt = con.createStatement();
-		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date" + 
-				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3" + 
-				"         ON p1.TechID=" + techID +" AND p2.patientID=p3.patientID AND p1.visitID= p3.visitID"); 
+		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date,p1.Status,p4.testTypeID,p4.TestType" + 
+				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3 INNER JOIN testType AS p4" + 
+				"         ON (p1.TechID=" + techID +"  AND (p2.patientID=p3.patientID AND p3.visitID=p1.visitID) AND p1.visitID= p3.visitID AND p1.TestTypeID = p4.TestTypeID)"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-				tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),String.valueOf(rs.getInt(2)),"-",rs.getString(4),String.valueOf(rs.getInt(1))));
+			System.out.print(" Test "+ rs.getInt(1) );
+				tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),rs.getString(11),rs.getString(9),rs.getString(4),String.valueOf(rs.getInt(1))));
 		}
 		 table.setItems(tableContents);
 		}
@@ -165,12 +200,12 @@ public class LabTechController implements Initializable {
 		tableContents=FXCollections.observableArrayList();
 		try {
 			stmt = con.createStatement();
-		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date" + 
-				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3" + 
-				"         ON p1.TechID=-1"); 
+		ResultSet rs=stmt.executeQuery("        SELECT p1.TestID, p1.TestTypeID,p1.VisitID,p1.Result, p2.lName,p2.fName,p2.DateOfBirth,p3.Date,p4.testTypeID,p4.TestType" + 
+				"       FROM Tests AS p1 INNER JOIN patients AS p2 INNER JOIN visits AS p3 INNER JOIN testType AS p4" + 
+				"         ON (p1.TechID=-1 AND p1.TestTypeID=p4.testTypeID AND p1.VisitID = p3.VisitID 	AND p2.PatientID = p3.PatientID )"); 
 		tableContents=FXCollections.observableArrayList();
 		while(rs.next()) {
-			tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),String.valueOf(rs.getInt(2)),"-",rs.getString(4),String.valueOf(rs.getInt(1))));
+			tableContents.add(new Test_Model(rs.getString(5) + "," + rs.getString(6),rs.getString(8),rs.getString(10),"Incomplete",rs.getString(4),String.valueOf(rs.getInt(1))));
 		}
 		 untable.setItems(tableContents);
 		}

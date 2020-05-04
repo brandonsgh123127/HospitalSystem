@@ -23,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -75,11 +76,50 @@ public class SecretaryController implements Initializable{
 	        					// TODO Auto-generated catch block
 	        					e.printStackTrace();
 	        				}	
-	        			}});           		
+	        			}});         
 
 		        }
 		    }
 		});
+		
+		/*
+		 * Search For Specific Doctor
+		 */
+		search.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent event) {
+				Statement stmt;
+				try {
+					stmt = con.createStatement();
+					if(search.getText().equals(null))
+						updateDataTable();
+					else {
+					ResultSet rs=stmt.executeQuery("SELECT * FROM Patients WHERE (PatientID LIKE '%"+ search.getText() +
+							"%' OR fName LIKE '%"+ search.getText() + "%' OR lName LIKE '%"+ search.getText() +
+							"%' OR CONCAT(fName,'', lName, '') LIKE \"%"+ search.getText() + "%\") "); 
+					tableContents=FXCollections.observableArrayList();
+					
+					while(rs.next()) {
+						boolean res; //Boolean needed for adding data to table...  if resident or not
+						if(rs.getInt(12) ==1)
+							res=true;
+						else
+							res=false;
+						tableContents.add(new Visitor_Model(rs.getInt(1),rs.getString(3),rs.getString(2),rs.getString(10),
+								rs.getString(4),rs.getString(5),rs.getString(6),rs.getString(7),rs.getString(9),rs.getString(8),rs.getString(11),res,
+								rs.getString(13),rs.getString(14)));					}
+					table.setItems(tableContents);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		});
+  		
 
 		
 	    addUser.setOnAction(
@@ -139,7 +179,6 @@ public class SecretaryController implements Initializable{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		table.setItems(tableContents);
 		while(rs.next()) {
 			boolean res; //Boolean needed for adding data to table...  if resident or not
 			if(rs.getInt(12) ==1)

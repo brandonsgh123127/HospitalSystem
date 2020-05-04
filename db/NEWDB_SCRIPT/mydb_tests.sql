@@ -28,6 +28,7 @@ CREATE TABLE `tests` (
   `TestTypeID` int NOT NULL,
   `TechID` int DEFAULT NULL,
   `Result` longtext,
+  `Status` varchar(20),
   `ResultImg` longblob,
   PRIMARY KEY (`TestID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -39,7 +40,7 @@ CREATE TABLE `tests` (
 
 LOCK TABLES `tests` WRITE;
 /*!40000 ALTER TABLE `tests` DISABLE KEYS */;
-INSERT INTO `tests` VALUES (1,1,1,1333,'Negative',NULL);
+INSERT INTO `tests` VALUES (1,1,1,1333,'Negative','-',NULL);
 /*!40000 ALTER TABLE `tests` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
