@@ -5,52 +5,56 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" text="Home" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <content>
-      <HBox prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <VBox prefHeight="200.0" prefWidth="960.0">
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TitledPane collapsible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" text="Home">
+         <content>
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label minHeight="100.0" text="My Tests">
-                     <font>
-                        <Font name="Segoe UI Bold" size="20.0" />
-                     </font>
-                  </Label>
-                  <TableView maxWidth="850.0" prefHeight="800.0" prefWidth="200.0">
-                    <columns>
-                      <TableColumn prefWidth="200.0" text="Patient" />
-                      <TableColumn prefWidth="200.0" text="Test" />
-                        <TableColumn prefWidth="200.0" text="Status" />
-                        <TableColumn prefWidth="116.0" text="Result" />
-                        <TableColumn prefWidth="133.0" text="View" />
-                    </columns>
-                  </TableView>
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="960.0">
-               <children>
-                  <HBox alignment="CENTER_LEFT" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0">
+                  <VBox prefHeight="200.0" prefWidth="960.0">
                      <children>
-                        <Label text="Unassigned Tests">
+                        <Label minHeight="100.0" text="My Tests">
                            <font>
                               <Font name="Segoe UI Bold" size="20.0" />
                            </font>
                         </Label>
-                        <TextField promptText="Search" translateX="560.0" />
+                        <TableView fx:id="table" maxWidth="850.0" prefHeight="800.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn fx:id="patient" prefWidth="200.0" text="Patient" />
+                            <TableColumn fx:id="test" prefWidth="200.0" text="Test" />
+                              <TableColumn fx:id="status" prefWidth="200.0" text="Status" />
+                              <TableColumn fx:id="result" prefWidth="116.0" text="Result" />
+                              <TableColumn fx:id="view" prefWidth="133.0" text="View" />
+                          </columns>
+                        </TableView>
                      </children>
-                  </HBox>
-                  <TableView maxWidth="900.0" prefHeight="800.0" prefWidth="200.0">
-                     <columns>
-                        <TableColumn prefWidth="200.0" text="Patient Name" />
-                        <TableColumn prefWidth="200.0" text="Test Type" />
-                        <TableColumn prefWidth="200.0" text="Time Ordered" />
-                        <TableColumn prefWidth="200.0" text="Date Ordered" />
-                        <TableColumn prefWidth="58.0" />
-                     </columns>
-                  </TableView>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="960.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" maxHeight="100.0" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Unassigned Tests">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="search" promptText="Search" translateX="560.0" />
+                           </children>
+                        </HBox>
+                        <TableView fx:id="untable" maxWidth="900.0" prefHeight="800.0" prefWidth="200.0">
+                           <columns>
+                              <TableColumn fx:id="unPatient" prefWidth="200.0" text="Patient Name" />
+                              <TableColumn fx:id="unTest" prefWidth="200.0" text="Test Type" />
+                              <TableColumn fx:id="unDate" prefWidth="200.0" text="Date Ordered" />
+                              <TableColumn prefWidth="58.0" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
-         </children>
-      </HBox>
-   </content>
-</TitledPane>
+            </HBox>
+         </content>
+      </TitledPane>
+   </children>
+</VBox>
