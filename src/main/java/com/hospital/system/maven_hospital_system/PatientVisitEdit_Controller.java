@@ -44,13 +44,6 @@ import javafx.util.converter.IntegerStringConverter;
  * 
  * 
  * 
- * __________________________________________\
- * *
- * *
- * *		NOT COMPLETE
- * *
- * *
- * ____________________________________________________
  * @author spada
  *
  */
