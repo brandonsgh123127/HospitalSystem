@@ -160,7 +160,6 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 show tables from mydb;
 use mydb;
 -- Insert Default Users, 1234 admin, 3270 root
-Insert into visits Values(2,'04-20-2020','-',4043,2808,3,'-','-');
 /*Default user for Doctor is 1234 admin, default admin account is 1235 root*/
 INSERT INTO `users` VALUES (1234,1,'Andrew','Jung','8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',0),(1235,0,'John','Smith','4813494d137e1631bba301d5acab6e7bb7aa74ce1185d456565ef51d737677b2',1);
 INSERT INTO `Patients` VALUES (11421,'Appleseed', 'Johnny' , '120 Apple Hill', 'Hartford' , 'CT' , '06110' , '2229102902' , 'appleseed@johnny.com' , '1988-04-09' , 'United States' , 1 , '19038202-38930' , 'Aet');
